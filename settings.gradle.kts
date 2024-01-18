@@ -15,5 +15,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "WeatherPlatformKMP"
-include(":andrroidWeatherPlatform")
+include(":androidWeatherPlatform")
 include(":sharedWeatherPlatform")
