@@ -1,4 +1,8 @@
 plugins {
+    id("app.cash.sqldelight")
+    id("com.google.gms.google-services")
+    kotlin("plugin.serialization")
+
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
 }
@@ -30,19 +34,22 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 }
 
 dependencies {
+    implementation(platform("androidx.compose:compose-bom:2023.08.00"))
+
     implementation(projects.sharedWeatherPlatform)
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material3)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.appcompat)
     debugImplementation(libs.compose.ui.tooling)
 }

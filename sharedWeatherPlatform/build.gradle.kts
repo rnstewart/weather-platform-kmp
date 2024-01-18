@@ -1,4 +1,8 @@
 plugins {
+    id("co.touchlab.skie") version "0.6.1"
+    id("app.cash.sqldelight")
+    kotlin("plugin.serialization")
+
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
 }
@@ -7,7 +11,7 @@ kotlin {
     androidTarget {
         compilations.all {
             kotlinOptions {
-                jvmTarget = "1.8"
+                jvmTarget = "17"
             }
         }
     }
