@@ -29,7 +29,33 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            //put your multiplatform dependencies here
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.auth)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.client.json)
+            implementation(libs.ktor.client.serialization)
+            implementation(libs.ktor.client.content.negotiation)
+
+            implementation(libs.sqldelight.runtime)
+
+            implementation(libs.ktor.serialization.kotlinx.json)
+        }
+        androidMain.dependencies {
+            implementation(libs.ktor.client.android)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.auth.jvm)
+            implementation(libs.ktor.client.android)
+            implementation(libs.ktor.client.logging.jvm)
+            implementation(libs.ktor.client.json.jvm)
+            implementation(libs.ktor.client.serialization.jvm)
+
+            implementation(libs.sqldelight.android.driver)
+        }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.ios)
+
+            implementation(libs.sqldelight.native.driver)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -42,5 +68,13 @@ android {
     compileSdk = 34
     defaultConfig {
         minSdk = 24
+    }
+
+    sqldelight {
+        databases {
+            create("WeatherPlatformDB") {
+                packageName.set("com.zmosoft.weatherplatform")
+            }
+        }
     }
 }
