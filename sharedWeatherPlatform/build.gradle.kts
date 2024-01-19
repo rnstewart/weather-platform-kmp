@@ -43,6 +43,8 @@ kotlin {
             implementation(libs.klock)
 
             implementation(libs.ktor.serialization.kotlinx.json)
+
+            api(libs.kodein.di)
         }
         androidMain.dependencies {
             implementation(libs.ktor.client.android)
