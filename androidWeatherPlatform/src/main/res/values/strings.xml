@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Weather Platform</string>
+    <string name="search_location">Search Location</string>
+    <string name="current_location">Current Location</string>
+    <string name="temperature_x">%s °F</string>
+    <string name="sunrise_x">Sunrise: %s</string>
+    <string name="sunset_x">Sunset: %s</string>
+    <string name="error_x">Error %s</string>
+    <string name="error">Error</string>
+    <string name="ok">OK</string>
+    <string name="error_location">Unable to get location</string>
+    <string name="wind_info">%s MPH</string>
+    <string name="wind_info_direction">%s, %s MPH</string>
+    <string name="icon_factor">1</string>
+    <string name="error_no_address">No address given</string>
+    <string name="error_no_city">No city given</string>
+    <string name="error_no_location">No location given</string>
+    <string name="error_no_place_id">No Place ID Given</string>
+</resources>

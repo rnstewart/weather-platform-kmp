@@ -3,12 +3,11 @@ package com.zmosoft.weatherplatform.android
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.zmosoft.weatherplatform.Greeting
+import com.zmosoft.weatherplatform.android.compose.WeatherPlatformTheme
+import com.zmosoft.weatherplatform.android.compose.main.MainScreen
 import com.zmosoft.weatherplatform.android.di.AndroidModules
 import com.zmosoft.weatherplatform.android.mvvm.viewmodels.MainActivityViewModel
 import com.zmosoft.weatherplatform.android.utils.LocalRepositoryContent
@@ -46,7 +45,17 @@ class MainActivity : ComponentActivity(), DIAware {
                         interfaces = viewModel.interfaces
                     )
                 ) {
+                    MainScreen(
+                        onSearchClicked = {
 
+                        },
+                        onAutocompleteResultClicked = {
+
+                        },
+                        onLocationClicked = {
+
+                        }
+                    )
                 }
             }
         }

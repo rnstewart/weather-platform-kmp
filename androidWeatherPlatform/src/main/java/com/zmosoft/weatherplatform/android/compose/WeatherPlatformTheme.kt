@@ -1,4 +1,4 @@
-package com.zmosoft.weatherplatform.android
+package com.zmosoft.weatherplatform.android.compose
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
