@@ -38,6 +38,10 @@ kotlin {
 
             implementation(libs.sqldelight.runtime)
 
+            implementation(libs.napier)
+
+            implementation(libs.klock)
+
             implementation(libs.ktor.serialization.kotlinx.json)
         }
         androidMain.dependencies {
@@ -50,6 +54,8 @@ kotlin {
             implementation(libs.ktor.client.serialization.jvm)
 
             implementation(libs.sqldelight.android.driver)
+
+            implementation(libs.klock)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.core)
@@ -57,9 +63,9 @@ kotlin {
 
             implementation(libs.sqldelight.native.driver)
         }
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-        }
+//        commonTest.dependencies {
+//            implementation(libs.kotlin.test)
+//        }
     }
 }
 
@@ -67,7 +73,7 @@ android {
     namespace = "com.zmosoft.weatherplatform"
     compileSdk = 34
     defaultConfig {
-        minSdk = 24
+        minSdk = 26
     }
 
     compileOptions {
