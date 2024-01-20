@@ -1,8 +1,6 @@
 package com.zmosoft.weatherplatform.utils
 
-import kotlinx.cinterop.addressOf
-import kotlinx.cinterop.convert
-import kotlinx.cinterop.usePinned
+import kotlinx.cinterop.*
 import platform.CoreCrypto.CC_SHA256
 import platform.CoreCrypto.CC_SHA256_DIGEST_LENGTH
 import platform.Foundation.*
@@ -46,7 +44,7 @@ actual object StringFormat {
     }
 }
 
-@OptIn(ExperimentalUnsignedTypes::class)
+@OptIn(ExperimentalUnsignedTypes::class, ExperimentalForeignApi::class)
 actual fun String.md5(): String {
     val input = encodeToByteArray()
     val digest = UByteArray(CC_SHA256_DIGEST_LENGTH)
