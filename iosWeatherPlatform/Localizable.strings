@@ -1,0 +1,24 @@
+/* 
+  Localizable.strings
+  iosWeatherPlatform
+
+  Created by Russell Stewart on 1/20/24.
+  Copyright © 2024 orgName. All rights reserved.
+*/
+"app_name" = "Weather Platform";
+"search_location" = "Search Location";
+"current_location" = "Current Location";
+"temperature_x" = "%@ °F";
+"sunrise_x" = "Sunrise: %@";
+"sunset_x" = "Sunset: %@";
+"error_x" = "Error %s";
+"error" = "Error";
+"ok" = "OK";
+"error_location" = "Unable to get location";
+"wind_info" = "%s MPH";
+"wind_info_direction" = "%@, %@ MPH";
+"icon_factor" = "1";
+"error_no_address" = "No address given";
+"error_no_city" = "No city given";
+"error_no_location" = "No location given";
+"error_no_place_id" = "No Place ID Given";

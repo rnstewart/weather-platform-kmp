@@ -42,6 +42,8 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Request location for weather data</string>
 	<key>UILaunchScreen</key>
 	<dict/>
 </dict>
