@@ -5,13 +5,13 @@ import com.zmosoft.weatherplatform.android.R
 import com.zmosoft.weatherplatform.api.models.response.weather.WeatherDataResponse
 
 val WeatherDataResponse.sunriseIcon: Int?
-    get() = if (sunriseStr?.isNotEmpty() == true)
+    get() = if (sunriseStr.isNotEmpty())
         R.drawable.ic_sunrise_32dp
     else
         null
 
 val WeatherDataResponse.sunsetIcon: Int?
-    get() = if (sunsetStr?.isNotEmpty() == true)
+    get() = if (sunsetStr.isNotEmpty())
         R.drawable.ic_sunset_32dp
     else
         null
@@ -36,17 +36,15 @@ fun WeatherDataResponse.getWindStr(context: Context): String {
 
 fun WeatherDataResponse.getCurrentTempStr(context: Context?): String? {
     return context?.let {
-        currentTempFahrenheit?.let { temp ->
-            context.getString(
-                R.string.temperature_x,
-                temp
-            )
-        }
+        context.getString(
+            R.string.temperature_x,
+            currentTempFahrenheit
+        )
     }
 }
 
 fun WeatherDataResponse.getWindIcon(context: Context): Int? {
-    return if (getWindStr(context)?.isNotEmpty() == true)
+    return if (getWindStr(context).isNotEmpty())
         R.drawable.ic_wind_32dp
     else
         null

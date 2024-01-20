@@ -12,6 +12,8 @@ compose-compiler = "1.5.4"
 compose-material3 = "1.1.2"
 ktor = "2.1.1"
 napier = "2.3.0"
+slf4jAndroid = "1.7.30-0"
+slf4jApi = "1.7.32"
 sqldelight = "2.0.0"
 playServicesLocation = "21.0.1"
 
@@ -20,6 +22,8 @@ coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose"
 klock = { module = "com.soywiz.korlibs.klock:klock", version.ref = "klock" }
 kodein-di = { module = "org.kodein.di:kodein-di", version.ref = "kodeinDi" }
 napier = { module = "io.github.aakira:napier", version.ref = "napier" }
+slf4j-android = { module = "uk.uuid.slf4j:slf4j-android", version.ref = "slf4jAndroid" }
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4jApi" }
 sqldelight-android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }

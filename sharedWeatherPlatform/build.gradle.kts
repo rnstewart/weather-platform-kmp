@@ -57,6 +57,9 @@ kotlin {
 
             implementation(libs.sqldelight.android.driver)
 
+            implementation(libs.slf4j.api)
+            implementation(libs.slf4j.android)
+
             implementation(libs.klock)
         }
         iosMain.dependencies {

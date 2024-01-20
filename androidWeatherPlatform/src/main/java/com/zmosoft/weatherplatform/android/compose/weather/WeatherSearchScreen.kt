@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -157,8 +158,10 @@ fun WeatherSearchScreen(
                 val weatherIconUrl = weatherData.getWeatherIconUrl(context)
                 if (weatherIconUrl?.isNotEmpty() == true) {
                     Image(
+                        modifier = Modifier.size(40.dp),
                         painter = rememberImagePainter(weatherIconUrl),
-                        contentDescription = null
+                        contentDescription = null,
+                        contentScale = ContentScale.Fit
                     )
                 }
                 Spacer(modifier = Modifier.weight(1.0f))

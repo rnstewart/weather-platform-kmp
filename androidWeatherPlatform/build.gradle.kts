@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.coil.compose)
     implementation(libs.play.services.location)
+    implementation(libs.napier)
 
     debugImplementation(libs.compose.ui.tooling)
 }
