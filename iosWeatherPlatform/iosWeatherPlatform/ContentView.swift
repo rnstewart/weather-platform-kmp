@@ -9,6 +9,8 @@ struct ContentView: View {
     @State var searchQuery: String = ""
     
     var body: some View {
+        let weatherData = weatherInterface.data
+        let googleMapsData = googleMapsInterface.data
         let isLoading: Bool = googleMapsInterface.data.loading || weatherInterface.data.loading
         
         VStack {
@@ -44,7 +46,7 @@ struct ContentView: View {
                 }
             }
             
-            let autocompletePredictions = googleMapsInterface.data.autocompletePredictions
+            let autocompletePredictions = googleMapsData.autocompletePredictions
             if !autocompletePredictions.isEmpty {
                 List {
                     ForEach(autocompletePredictions, id: \.self) { prediction in
@@ -58,7 +60,7 @@ struct ContentView: View {
                         }
                     }
                 }
-            } else if let data = weatherInterface.data.data {
+            } else if let data = weatherData.data {
                 HStack {
                     Spacer()
                     Text(data.name ?? "")
@@ -119,6 +121,8 @@ struct ContentView: View {
             }
             Spacer()
         }.padding(8).onAppear {
+            googleMapsInterface.setup()
+            weatherInterface.setup()
             locationManager.setLocationCallback { location in
                 if let location = location {
                     weatherInterface.searchWeather(
