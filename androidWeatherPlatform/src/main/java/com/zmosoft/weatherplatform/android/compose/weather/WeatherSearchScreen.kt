@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -19,22 +20,22 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.zmosoft.weatherplatform.android.R
 import com.zmosoft.weatherplatform.android.compose.WeatherPlatformTheme
-import com.zmosoft.weatherplatform.android.utils.LocalRepositoryContent
+import com.zmosoft.weatherplatform.android.utils.*
 import com.zmosoft.weatherplatform.api.models.response.geo.AutocompletePlacesData
-import com.zmosoft.weatherplatform.api.models.response.weather.WeatherDataResponse
+import com.zmosoft.weatherplatform.repositories.RepositoryDataContainer
+import com.zmosoft.weatherplatform.repositories.data.WeatherData
 
 @Composable
 fun WeatherSearchScreen(
     modifier: Modifier = Modifier,
-    autocompleteResults: List<AutocompletePlacesData.Prediction> = listOf(),
-    loading: Boolean = false,
-    onSearchClicked: (String) -> Unit,
-    onAutocompleteResultClicked: (AutocompletePlacesData.Prediction) -> Unit,
     onLocationClicked: () -> Unit
 ) {
     val content = LocalRepositoryContent.current
     val interfaces = content.interfaces
-    val weatherData = content.data.weatherData
+    val weatherData = content.data.weatherData.data
+    val autocompleteResults = content.data.googleMapsData.autocompletePredictions
+    val loading = content.data.weatherData.loading
+    val focusManager = LocalFocusManager.current
 
     var searchQuery by remember {
         mutableStateOf("")
@@ -82,7 +83,8 @@ fun WeatherSearchScreen(
                     modifier = Modifier
                         .padding(start = 8.dp)
                         .clickable {
-                            onSearchClicked(searchQuery)
+                            focusManager.clearFocus()
+                            interfaces?.weatherInterface?.searchWeather(searchQuery)
                         },
                     painter = painterResource(id = R.drawable.ic_update_black_32dp),
                     contentDescription = null
@@ -114,7 +116,7 @@ fun WeatherSearchScreen(
                         Row(
                             modifier = Modifier
                                 .clickable {
-                                    onAutocompleteResultClicked(prediction)
+                                    interfaces?.googleMapsInterface?.autocompleteResultSelected(prediction)
                                 }
                                 .padding(8.dp)
                                 .fillMaxWidth(),
@@ -122,7 +124,7 @@ fun WeatherSearchScreen(
                         ) {
                             Text(
                                 text = prediction.description ?: "",
-                                style = MaterialTheme.typography.body1.copy(
+                                style = MaterialTheme.typography.bodyMedium.copy(
                                     fontWeight = FontWeight.SemiBold
                                 )
                             )
@@ -135,7 +137,7 @@ fun WeatherSearchScreen(
             Text(
                 modifier = Modifier.padding(bottom = 16.dp),
                 text = weatherData.name ?: "",
-                style = MaterialTheme.typography.h4
+                style = MaterialTheme.typography.headlineMedium
             )
 
             Row(
@@ -145,7 +147,7 @@ fun WeatherSearchScreen(
                 Column {
                     Text(
                         text = weatherData.getCurrentTempStr(LocalContext.current) ?: "",
-                        style = MaterialTheme.typography.h5
+                        style = MaterialTheme.typography.headlineSmall
                     )
                     Text(
                         text = weatherData.currentWeatherCondition ?: ""
@@ -206,31 +208,19 @@ fun WeatherSearchScreen(
 @Preview
 @Composable
 fun PreviewWeatherSearchScreen() {
-    WeatherPlatformTheme {
-        WeatherSearchScreen(
-            weatherData = WeatherDataResponse(
-                name = "Albuquerque",
-                main = WeatherDataResponse.Main(
-                    temp = 283.0
-                ),
-                weather = listOf(
-                    WeatherDataResponse.Weather(
-                        main = "Clouds"
-                    )
-                ),
-                wind = WeatherDataResponse.Wind(
-                    speed = 12.3,
-                    deg = 51
-                ),
-                sys = WeatherDataResponse.Sys(
-                    sunrise = 1647754260,
-                    sunset = 1647799183
+    CompositionLocalProvider(
+        LocalRepositoryContent provides RepositoryContent(
+            data = RepositoryDataContainer(
+                weatherData = WeatherData(
+                    data = ComposeTestData.weatherData
                 )
-            ),
-            loading = false,
-            onSearchClicked = {},
-            onAutocompleteResultClicked = {},
-            onLocationClicked = {}
+            )
         )
+    ) {
+        WeatherPlatformTheme {
+            WeatherSearchScreen(
+                onLocationClicked = {}
+            )
+        }
     }
 }

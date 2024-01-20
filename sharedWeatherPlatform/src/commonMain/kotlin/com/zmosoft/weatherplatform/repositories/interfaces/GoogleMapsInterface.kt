@@ -9,10 +9,7 @@ interface GoogleMapsInterface {
         latitude: Double? = null,
         longitude: Double? = null
     )
-    fun autocompleteResultSelected(
-        location: AutocompletePlacesData.Prediction,
-        weatherRepository: WeatherRepository
-    )
+    fun autocompleteResultSelected(location: AutocompletePlacesData.Prediction)
     fun placeDetails(
         placeId: String,
         fields: String? = "address_component,name,geometry"

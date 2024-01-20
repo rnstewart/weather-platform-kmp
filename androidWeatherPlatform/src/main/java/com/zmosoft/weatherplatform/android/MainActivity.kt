@@ -10,8 +10,7 @@ import com.zmosoft.weatherplatform.android.compose.WeatherPlatformTheme
 import com.zmosoft.weatherplatform.android.compose.main.MainScreen
 import com.zmosoft.weatherplatform.android.di.AndroidModules
 import com.zmosoft.weatherplatform.android.mvvm.viewmodels.MainActivityViewModel
-import com.zmosoft.weatherplatform.android.utils.LocalRepositoryContent
-import com.zmosoft.weatherplatform.android.utils.RepositoryContent
+import com.zmosoft.weatherplatform.android.utils.*
 import com.zmosoft.weatherplatform.di.SharedModules
 import com.zmosoft.weatherplatform.repositories.RepositoryDataContainer
 import org.kodein.di.*
@@ -29,11 +28,16 @@ class MainActivity : ComponentActivity(), DIAware {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val vm: MainActivityViewModel by di.instance(
-            arg = (application as WeatherPlatformApplication)
+            arg = this
         )
         viewModel = vm
 
         super.onCreate(savedInstanceState)
+
+        if (!checkLocationPermission(both = true)) {
+            requestLocationPermission(Constants.RequestCodes.REQUEST_LOCATION_PERMISSION)
+        }
+
         setContent {
             WeatherPlatformTheme {
                 CompositionLocalProvider(
@@ -46,31 +50,14 @@ class MainActivity : ComponentActivity(), DIAware {
                     )
                 ) {
                     MainScreen(
-                        onSearchClicked = {
-
-                        },
-                        onAutocompleteResultClicked = {
-
-                        },
                         onLocationClicked = {
-
+                            if (checkLocationPermission(both = true)) {
+                                viewModel.updateLocation(this)
+                            }
                         }
                     )
                 }
             }
         }
-    }
-}
-
-@Composable
-fun GreetingView(text: String) {
-    Text(text = text)
-}
-
-@Preview
-@Composable
-fun DefaultPreview() {
-    WeatherPlatformTheme {
-        GreetingView("Hello, Android!")
     }
 }

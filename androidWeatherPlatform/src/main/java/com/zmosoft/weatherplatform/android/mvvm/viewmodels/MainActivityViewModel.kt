@@ -1,9 +1,12 @@
 package com.zmosoft.weatherplatform.android.mvvm.viewmodels
 
-import androidx.lifecycle.AndroidViewModel
+import android.app.Activity
+import android.content.Context
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.zmosoft.weatherplatform.android.WeatherPlatformApplication
+import com.google.android.gms.location.LocationServices
 import com.zmosoft.weatherplatform.android.di.AndroidModules
+import com.zmosoft.weatherplatform.android.utils.checkLocationPermission
 import com.zmosoft.weatherplatform.data.SharedRepositories
 import com.zmosoft.weatherplatform.di.SharedModules
 import com.zmosoft.weatherplatform.interfaces.SharedGoogleMapsInterface
@@ -12,8 +15,8 @@ import com.zmosoft.weatherplatform.repositories.RepositoryInterfaceContainer
 import org.kodein.di.*
 
 class MainActivityViewModel(
-    application: WeatherPlatformApplication
-): AndroidViewModel(application), DIAware {
+    activity: Activity
+): ViewModel(), DIAware {
     override val di by DI.lazy {
         importAll(
             AndroidModules.vmModule,
@@ -21,6 +24,8 @@ class MainActivityViewModel(
             SharedModules.repositoriesModule
         )
     }
+
+    private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
 
     val sharedRepositories: SharedRepositories by di.instance()
 
@@ -38,4 +43,15 @@ class MainActivityViewModel(
         googleMapsInterface = googleMapsInterface,
         weatherInterface = weatherInterface
     )
+
+    fun updateLocation(context: Context) {
+        if (context.checkLocationPermission(both = true)) {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                weatherInterface.searchWeather(
+                    latitude = location.latitude,
+                    longitude = location.longitude
+                )
+            }
+        }
+    }
 }

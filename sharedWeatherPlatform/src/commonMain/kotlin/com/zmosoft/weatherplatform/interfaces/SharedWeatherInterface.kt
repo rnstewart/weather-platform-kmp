@@ -9,12 +9,6 @@ class SharedWeatherInterface(
     scope: CoroutineScope?,
     private val sharedRepositories: SharedRepositories
 ): SharedInterfaceBase(scope = scope), WeatherInterface {
-    override fun isLoading(loading: Boolean) {
-        coroutineScope.launch {
-            sharedRepositories.weatherRepository.isLoading(loading)
-        }
-    }
-
     override fun searchWeather(query: String, latitude: Double?, longitude: Double?) {
         coroutineScope.launch {
             sharedRepositories.weatherRepository.searchWeather(

@@ -22,13 +22,12 @@ class SharedGoogleMapsInterface(
     }
 
     override fun autocompleteResultSelected(
-        location: AutocompletePlacesData.Prediction,
-        weatherRepository: WeatherRepository
+        location: AutocompletePlacesData.Prediction
     ) {
         coroutineScope.launch {
             sharedRepositories.googleMapsRepository.autocompleteResultSelected(
                 location = location,
-                weatherRepository = weatherRepository
+                weatherRepository = sharedRepositories.weatherRepository
             )
         }
     }

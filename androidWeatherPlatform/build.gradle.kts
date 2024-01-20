@@ -51,5 +51,8 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.appcompat)
+    implementation(libs.coil.compose)
+    implementation(libs.play.services.location)
+
     debugImplementation(libs.compose.ui.tooling)
 }

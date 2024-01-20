@@ -9,21 +9,17 @@ import kotlinx.coroutines.withContext
 class WeatherRepository: RepositoryBase() {
     val data = MutableStateFlow(WeatherData())
 
-    suspend fun isLoading(loading: Boolean) {
-        data.emit(
-            data.value.copy(
-                loading = loading
-            )
-        )
-        error.emit(null)
-    }
-
     suspend fun searchWeather(
         query: String = "",
         latitude: Double? = null,
         longitude: Double? = null
     ) {
         withContext (BackgroundDispatcher) {
+            data.emit(
+                data.value.copy(
+                    loading = true
+                )
+            )
             val response = openWeatherService.getCurrentWeatherDataByLocation(
                 query = query,
                 latitude = latitude,
