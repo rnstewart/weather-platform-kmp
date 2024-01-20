@@ -9,15 +9,6 @@ import kotlinx.coroutines.withContext
 class GoogleMapsRepository: RepositoryBase() {
     val data = MutableStateFlow(GoogleMapsData())
 
-    suspend fun isLoading(loading: Boolean) {
-        data.emit(
-            data.value.copy(
-                loading = loading
-            )
-        )
-        error.emit(null)
-    }
-
     suspend fun clear() {
         data.emit(GoogleMapsData())
     }
@@ -28,6 +19,11 @@ class GoogleMapsRepository: RepositoryBase() {
         longitude: Double? = null
     ) {
         withContext (BackgroundDispatcher) {
+            data.emit(
+                data.value.copy(
+                    loading = true
+                )
+            )
             val response = googleMapsService.placesAutoComplete(
                 input = input,
                 latitude = latitude,

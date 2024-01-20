@@ -33,9 +33,10 @@ fun WeatherSearchScreen(
 ) {
     val content = LocalRepositoryContent.current
     val interfaces = content.interfaces
-    val weatherData = content.data.weatherData.data
-    val autocompleteResults = content.data.googleMapsData.autocompletePredictions
-    val loading = content.data.weatherData.loading
+    val data = content.data
+    val weatherData = data.weatherData.data
+    val autocompleteResults = data.googleMapsData.autocompletePredictions
+    val loading = (data.googleMapsData.loading || data.weatherData.loading)
     val focusManager = LocalFocusManager.current
 
     var searchQuery by remember {
@@ -74,36 +75,50 @@ fun WeatherSearchScreen(
                     searchQuery = it
                 }
             )
-            if (loading) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .padding(start = 8.dp)
-                )
-            } else if (searchQuery.isNotEmpty()) {
-                Image(
-                    modifier = Modifier
-                        .padding(start = 8.dp)
-                        .clickable {
-                            focusManager.clearFocus()
-                            interfaces?.googleMapsInterface?.placesAutoComplete(searchQuery)
-                        },
-                    imageVector = Icons.Filled.Search,
-                    contentDescription = null
-                )
+
+            if (searchQuery.isNotEmpty()) {
+                IconButton(
+                    onClick = {
+                        focusManager.clearFocus()
+                        interfaces?.googleMapsInterface?.placesAutoComplete(searchQuery)
+                    },
+                    enabled = !loading
+                ) {
+                    Image(
+                        imageVector = Icons.Filled.List,
+                        contentDescription = null
+                    )
+                }
+
+                IconButton(
+                    onClick = {
+                        focusManager.clearFocus()
+                        interfaces?.weatherInterface?.searchWeather(searchQuery)
+                    },
+                    enabled = !loading
+                ) {
+                    Image(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = null
+                    )
+                }
             } else {
-                Image(
-                    modifier = Modifier
-                        .padding(start = 8.dp)
-                        .clickable {
-                            onLocationClicked()
-                        },
-                    imageVector = Icons.Filled.LocationOn,
-                    contentDescription = null
-                )
+                IconButton(
+                    onClick = onLocationClicked
+                ) {
+                    Image(
+                        imageVector = Icons.Filled.LocationOn,
+                        contentDescription = null
+                    )
+                }
             }
         }
 
-        if (autocompleteResults.isNotEmpty()) {
+        if (loading) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(80.dp)
+            )
+        } else if (autocompleteResults.isNotEmpty()) {
             LazyColumn(
                 modifier = Modifier
                     .weight(1.0f)
@@ -117,7 +132,9 @@ fun WeatherSearchScreen(
                         Row(
                             modifier = Modifier
                                 .clickable {
-                                    interfaces?.googleMapsInterface?.autocompleteResultSelected(prediction)
+                                    interfaces?.googleMapsInterface?.autocompleteResultSelected(
+                                        prediction
+                                    )
                                 }
                                 .padding(8.dp)
                                 .fillMaxWidth(),
