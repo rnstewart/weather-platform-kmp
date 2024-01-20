@@ -8,5 +8,7 @@ captures
 .cxx
 local.properties
 xcuserdata
+xcshareddata
+project.xcworkspace
 google-services.json
 apiKeys.json
