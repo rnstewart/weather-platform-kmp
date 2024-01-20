@@ -140,20 +140,21 @@ fun WeatherSearchScreen(
                 style = MaterialTheme.typography.headlineMedium
             )
 
+            val context = LocalContext.current
             Row(
                 modifier = Modifier.padding(bottom = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column {
                     Text(
-                        text = weatherData.getCurrentTempStr(LocalContext.current) ?: "",
+                        text = weatherData.getCurrentTempStr(context) ?: "",
                         style = MaterialTheme.typography.headlineSmall
                     )
                     Text(
-                        text = weatherData.currentWeatherCondition ?: ""
+                        text = weatherData.currentWeatherCondition
                     )
                 }
-                val weatherIconUrl = weatherData.getWeatherIconUrl(LocalContext.current)
+                val weatherIconUrl = weatherData.getWeatherIconUrl(context)
                 if (weatherIconUrl?.isNotEmpty() == true) {
                     Image(
                         painter = rememberImagePainter(weatherIconUrl),
@@ -168,13 +169,13 @@ fun WeatherSearchScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Spacer(modifier = Modifier.weight(1.0f))
-                weatherData.getWindIcon(LocalContext.current)?.let { windIcon ->
+                weatherData.getWindIcon(context)?.let { windIcon ->
                     Image(
                         painter = painterResource(id = windIcon),
                         contentDescription = null
                     )
                 }
-                Text(text = weatherData.getWindStr(LocalContext.current))
+                Text(text = weatherData.getWindStr(context))
                 Spacer(modifier = Modifier.weight(1.0f))
             }
 
@@ -188,7 +189,7 @@ fun WeatherSearchScreen(
                         painter = painterResource(id = sunriseIcon),
                         contentDescription = null
                     )
-                    Text(text = weatherData.sunriseStr ?: "")
+                    Text(text = weatherData.sunriseStr)
                 }
                 Spacer(modifier = Modifier.weight(1.0f))
                 weatherData.sunsetIcon?.let { sunsetIcon ->
@@ -196,7 +197,7 @@ fun WeatherSearchScreen(
                         painter = painterResource(id = sunsetIcon),
                         contentDescription = null
                     )
-                    Text(text = weatherData.sunsetStr ?: "")
+                    Text(text = weatherData.sunsetStr)
                 }
                 Spacer(modifier = Modifier.weight(1.0f))
             }

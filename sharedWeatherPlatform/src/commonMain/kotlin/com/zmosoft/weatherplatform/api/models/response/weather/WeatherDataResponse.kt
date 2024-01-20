@@ -74,12 +74,12 @@ data class WeatherDataResponse(
         var sunset: Long? = null
     )
 
-    fun getIconUrl(density: Int): String? {
+    fun getIconUrl(density: Int): String {
         val icon = weather?.getOrNull(0)?.icon
         return if (icon?.isNotEmpty() == true) {
             "$ICON_URL_BASE$icon@${density}x.png"
         } else {
-            null
+            ""
         }
     }
 
@@ -97,25 +97,21 @@ data class WeatherDataResponse(
             }
         }
 
-    val currentTempFahrenheit: String?
-        get() = main?.temp?.kelvinToFahrenheit()?.roundToInt()?.toString()
+    val currentTempFahrenheit: String
+        get() = main?.temp?.kelvinToFahrenheit()?.roundToInt()?.toString() ?: ""
 
-    val currentWeatherCondition: String?
-        get() = weather?.getOrNull(0)?.main
+    val currentWeatherCondition: String
+        get() = weather?.getOrNull(0)?.main ?: ""
 
-    val sunriseStr: String?
+    val sunriseStr: String
         get() = sys?.sunrise?.let {
         DateTimeTz.fromUnix(it * 1000).format(DateFormat(Constants.TIME_FORMAT))
-    } ?: run {
-        null
-    }
+    } ?: ""
 
-    val sunsetStr: String?
+    val sunsetStr: String
         get() = sys?.sunset?.let { sunset ->
             DateTimeTz.fromUnix(sunset * 1000).format(DateFormat(Constants.TIME_FORMAT))
-        } ?: run {
-            null
-        }
+        } ?: ""
 
     private fun getWindDirectionString(deg: Int?): String {
         return deg?.toDouble()?.let {
