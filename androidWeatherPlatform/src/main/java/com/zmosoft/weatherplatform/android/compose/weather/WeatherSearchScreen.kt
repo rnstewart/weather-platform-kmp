@@ -4,7 +4,8 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,7 +22,6 @@ import coil.compose.rememberImagePainter
 import com.zmosoft.weatherplatform.android.R
 import com.zmosoft.weatherplatform.android.compose.WeatherPlatformTheme
 import com.zmosoft.weatherplatform.android.utils.*
-import com.zmosoft.weatherplatform.api.models.response.geo.AutocompletePlacesData
 import com.zmosoft.weatherplatform.repositories.RepositoryDataContainer
 import com.zmosoft.weatherplatform.repositories.data.WeatherData
 
@@ -64,7 +64,7 @@ fun WeatherSearchScreen(
                             modifier = Modifier.clickable {
                                 searchQuery = ""
                             },
-                            painter = painterResource(id = R.drawable.ic_clear_black_32dp),
+                            imageVector = Icons.Filled.Clear,
                             contentDescription = null
                         )
                     }
@@ -86,7 +86,7 @@ fun WeatherSearchScreen(
                             focusManager.clearFocus()
                             interfaces?.weatherInterface?.searchWeather(searchQuery)
                         },
-                    painter = painterResource(id = R.drawable.ic_update_black_32dp),
+                    imageVector = Icons.Filled.Refresh,
                     contentDescription = null
                 )
             } else {
@@ -96,7 +96,7 @@ fun WeatherSearchScreen(
                         .clickable {
                             onLocationClicked()
                         },
-                    painter = painterResource(id = R.drawable.ic_location_black_32dp),
+                    imageVector = Icons.Filled.LocationOn,
                     contentDescription = null
                 )
             }
@@ -174,7 +174,7 @@ fun WeatherSearchScreen(
                         contentDescription = null
                     )
                 }
-                Text(text = weatherData.getWindStr(LocalContext.current) ?: "")
+                Text(text = weatherData.getWindStr(LocalContext.current))
                 Spacer(modifier = Modifier.weight(1.0f))
             }
 

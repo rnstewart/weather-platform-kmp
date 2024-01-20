@@ -16,7 +16,7 @@ val WeatherDataResponse.sunsetIcon: Int?
     else
         null
 
-fun WeatherDataResponse.getWindStr(context: Context): String? {
+fun WeatherDataResponse.getWindStr(context: Context): String {
     return windWithDirection?.let {
         val speed = it.first
         val dir = it.second
@@ -31,7 +31,7 @@ fun WeatherDataResponse.getWindStr(context: Context): String? {
                 R.string.wind_info,
                 speed
             )
-    }
+    } ?: ""
 }
 
 fun WeatherDataResponse.getCurrentTempStr(context: Context?): String? {
