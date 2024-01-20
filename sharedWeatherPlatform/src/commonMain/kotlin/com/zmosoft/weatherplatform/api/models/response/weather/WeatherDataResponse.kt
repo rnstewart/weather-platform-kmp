@@ -61,7 +61,13 @@ data class WeatherDataResponse(
             get() = speed?.let { speedValue ->
                 val dir = deg.directionString
                 if (dir.isNotEmpty())
-                    Pair(StringFormat.formatDecimal(speedValue, decimalDigits = 1), dir)
+                    Pair(
+                        StringFormat.formatDecimal(
+                            speedValue,
+                            decimalDigits = 1
+                        ),
+                        dir
+                    )
                 else
                     null
             }

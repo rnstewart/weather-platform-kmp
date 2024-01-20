@@ -85,9 +85,9 @@ fun WeatherSearchScreen(
                         .padding(start = 8.dp)
                         .clickable {
                             focusManager.clearFocus()
-                            interfaces?.weatherInterface?.searchWeather(searchQuery)
+                            interfaces?.googleMapsInterface?.placesAutoComplete(searchQuery)
                         },
-                    imageVector = Icons.Filled.Refresh,
+                    imageVector = Icons.Filled.Search,
                     contentDescription = null
                 )
             } else {

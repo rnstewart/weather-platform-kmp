@@ -61,9 +61,13 @@ class GoogleMapsRepository: RepositoryBase() {
                             latitude = latitude,
                             longitude = longitude
                         )
-                    } else {
-                        null
                     }
+                    data.emit(
+                        data.value.copy(
+                            autocompletePredictions = listOf(),
+                            placeDetails = response.data.result
+                        )
+                    )
                 } else {
                     error.emit(response.error)
                 }
