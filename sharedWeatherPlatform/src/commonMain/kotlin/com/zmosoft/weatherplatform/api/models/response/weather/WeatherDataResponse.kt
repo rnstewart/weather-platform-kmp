@@ -46,13 +46,26 @@ data class WeatherDataResponse(
         var tempMin: Double? = null,
         @SerialName("temp_max")
         var tempMax: Double? = null
-    )
+    ) {
+        val tempFahrenheit: String
+            get() = temp?.kelvinToFahrenheit()?.roundToInt()?.toString() ?: ""
+
+    }
 
     @Serializable
     data class Wind(
         var speed: Double? = null,
         var deg: Int? = null
-    )
+    ) {
+        val windWithDirection: Pair<String, String>?
+            get() = speed?.let { speedValue ->
+                val dir = deg.directionString
+                if (dir.isNotEmpty())
+                    Pair(StringFormat.formatDecimal(speedValue, decimalDigits = 1), dir)
+                else
+                    null
+            }
+    }
 
     @Serializable
     data class Rain(
@@ -72,7 +85,18 @@ data class WeatherDataResponse(
         var country: String? = null,
         var sunrise: Long? = null,
         var sunset: Long? = null
-    )
+    ) {
+        val sunriseStr: String
+            get() = sunrise?.let {
+                DateTimeTz.fromUnix(it * 1000).format(DateFormat(Constants.TIME_FORMAT))
+            } ?: ""
+
+        val sunsetStr: String
+            get() = sunset?.let { sunset ->
+                DateTimeTz.fromUnix(sunset * 1000).format(DateFormat(Constants.TIME_FORMAT))
+            } ?: ""
+
+    }
 
     fun getIconUrl(density: Int): String {
         val icon = weather?.getOrNull(0)?.icon
@@ -84,49 +108,19 @@ data class WeatherDataResponse(
     }
 
     val windWithDirection: Pair<String, String>?
-        get() {
-            return wind?.let {
-                val dir = getWindDirectionString(it.deg)
-                val speed = it.speed?.let { speedValue ->
-                    StringFormat.formatDecimal(speedValue, decimalDigits = 1)
-                }
-                if (speed != null && dir.isNotEmpty())
-                    Pair(speed, dir)
-                else
-                    null
-            }
-        }
+        get() = wind?.windWithDirection
 
     val currentTempFahrenheit: String
-        get() = main?.temp?.kelvinToFahrenheit()?.roundToInt()?.toString() ?: ""
+        get() = main?.tempFahrenheit ?: ""
 
     val currentWeatherCondition: String
         get() = weather?.getOrNull(0)?.main ?: ""
 
     val sunriseStr: String
-        get() = sys?.sunrise?.let {
-        DateTimeTz.fromUnix(it * 1000).format(DateFormat(Constants.TIME_FORMAT))
-    } ?: ""
+        get() = sys?.sunriseStr ?: ""
 
     val sunsetStr: String
-        get() = sys?.sunset?.let { sunset ->
-            DateTimeTz.fromUnix(sunset * 1000).format(DateFormat(Constants.TIME_FORMAT))
-        } ?: ""
-
-    private fun getWindDirectionString(deg: Int?): String {
-        return deg?.toDouble()?.let {
-            when {
-                (deg >= 22.5 && deg < 67.5) -> "NE"
-                (deg >= 67.5 && deg < 112.5) -> "E"
-                (deg >= 112.5 && deg < 157.5) -> "SE"
-                (deg >= 157.5 && deg < 202.5) -> "S"
-                (deg >= 202.5 && deg < 247.5) -> "SW"
-                (deg >= 247.5 && deg < 292.5) -> "W"
-                (deg >= 292.5 && deg < 337.5) -> "W"
-                else -> "N"
-            }
-        } ?: ""
-    }
+        get() = sys?.sunsetStr ?: ""
 
     companion object {
         const val ICON_URL_BASE = "https://openweathermap.org/img/wn/"
