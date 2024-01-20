@@ -29,10 +29,6 @@ class ObservableGoogleMapsInterface: ObservableObject, GoogleMapsInterface {
     }
 
     func setup() {
-        attachFlows()
-    }
-    
-    func attachFlows() {
         Task.detached {
             for await dataFlow in self.repositories.sharedRepositories.googleMapsRepository.data {
                 DispatchQueue.main.async {

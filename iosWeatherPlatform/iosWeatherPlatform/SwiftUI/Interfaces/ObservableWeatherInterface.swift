@@ -29,10 +29,6 @@ class ObservableWeatherInterface: ObservableObject, WeatherInterface {
     }
 
     func setup() {
-        attachFlows()
-    }
-    
-    func attachFlows() {
         Task.detached {
             for await dataFlow in self.repositories.sharedRepositories.weatherRepository.data {
                 DispatchQueue.main.async {
