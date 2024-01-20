@@ -12,6 +12,7 @@
 		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
 		7555FF83242A565900829871 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF82242A565900829871 /* ContentView.swift */; };
 		8651DBE12B5C664700842944 /* ObservableGoogleMapsInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8651DBE02B5C664700842944 /* ObservableGoogleMapsInterface.swift */; };
+		8651DBE32B5C6C6000842944 /* ObservableWeatherInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8651DBE22B5C6C6000842944 /* ObservableWeatherInterface.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,6 +36,7 @@
 		7555FF82242A565900829871 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		7555FF8C242A565B00829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8651DBE02B5C664700842944 /* ObservableGoogleMapsInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableGoogleMapsInterface.swift; sourceTree = "<group>"; };
+		8651DBE22B5C6C6000842944 /* ObservableWeatherInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableWeatherInterface.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,7 @@
 			isa = PBXGroup;
 			children = (
 				8651DBE02B5C664700842944 /* ObservableGoogleMapsInterface.swift */,
+				8651DBE22B5C6C6000842944 /* ObservableWeatherInterface.swift */,
 			);
 			path = Interfaces;
 			sourceTree = "<group>";
@@ -203,6 +206,7 @@
 			files = (
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
 				7555FF83242A565900829871 /* ContentView.swift in Sources */,
+				8651DBE32B5C6C6000842944 /* ObservableWeatherInterface.swift in Sources */,
 				8651DBE12B5C664700842944 /* ObservableGoogleMapsInterface.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
