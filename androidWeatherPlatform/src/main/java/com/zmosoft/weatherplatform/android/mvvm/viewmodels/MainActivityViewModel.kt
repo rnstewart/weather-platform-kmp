@@ -44,13 +44,15 @@ class MainActivityViewModel(
         weatherInterface = weatherInterface
     )
 
-    @SuppressLint("MissingPermission")
     fun updateLocation() {
-        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            weatherInterface.searchWeather(
-                latitude = location.latitude,
-                longitude = location.longitude
-            )
+        try {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                weatherInterface.searchWeather(
+                    latitude = location.latitude,
+                    longitude = location.longitude
+                )
+            }
+        } catch (e: SecurityException) {
         }
     }
 }
