@@ -1,12 +1,12 @@
 package com.zmosoft.weatherplatform.android.mvvm.viewmodels
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.LocationServices
 import com.zmosoft.weatherplatform.android.di.AndroidModules
-import com.zmosoft.weatherplatform.android.utils.checkLocationPermission
 import com.zmosoft.weatherplatform.data.SharedRepositories
 import com.zmosoft.weatherplatform.di.SharedModules
 import com.zmosoft.weatherplatform.interfaces.SharedGoogleMapsInterface
@@ -44,14 +44,13 @@ class MainActivityViewModel(
         weatherInterface = weatherInterface
     )
 
-    fun updateLocation(context: Context) {
-        if (context.checkLocationPermission(both = true)) {
-            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                weatherInterface.searchWeather(
-                    latitude = location.latitude,
-                    longitude = location.longitude
-                )
-            }
+    @SuppressLint("MissingPermission")
+    fun updateLocation() {
+        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            weatherInterface.searchWeather(
+                latitude = location.latitude,
+                longitude = location.longitude
+            )
         }
     }
 }

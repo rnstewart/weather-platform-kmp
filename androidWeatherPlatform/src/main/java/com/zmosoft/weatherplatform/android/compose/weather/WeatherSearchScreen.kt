@@ -25,11 +25,12 @@ import com.zmosoft.weatherplatform.android.compose.WeatherPlatformTheme
 import com.zmosoft.weatherplatform.android.utils.*
 import com.zmosoft.weatherplatform.repositories.RepositoryDataContainer
 import com.zmosoft.weatherplatform.repositories.data.WeatherData
+import kotlinx.coroutines.launch
 
 @Composable
 fun WeatherSearchScreen(
     modifier: Modifier = Modifier,
-    onLocationClicked: () -> Unit
+    onLocationClicked: suspend () -> Unit
 ) {
     val content = LocalRepositoryContent.current
     val interfaces = content.interfaces
@@ -38,6 +39,8 @@ fun WeatherSearchScreen(
     val autocompleteResults = data.googleMapsData.autocompletePredictions
     val loading = (data.googleMapsData.loading || data.weatherData.loading)
     val focusManager = LocalFocusManager.current
+
+    val coroutineScope = rememberCoroutineScope()
 
     var searchQuery by remember {
         mutableStateOf("")
@@ -104,7 +107,11 @@ fun WeatherSearchScreen(
                 }
             } else {
                 IconButton(
-                    onClick = onLocationClicked
+                    onClick = {
+                        coroutineScope.launch {
+                            onLocationClicked()
+                        }
+                    }
                 ) {
                     Image(
                         imageVector = Icons.Filled.LocationOn,

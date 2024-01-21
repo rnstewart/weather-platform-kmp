@@ -15,7 +15,7 @@ import com.zmosoft.weatherplatform.repositories.data.WeatherData
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
-    onLocationClicked: () -> Unit
+    onLocationClicked: suspend () -> Unit
 ) {
     Scaffold(modifier = modifier) {
         WeatherSearchScreen(
