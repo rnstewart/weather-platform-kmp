@@ -287,3 +287,9 @@ interfaces?.weatherInterface?.searchWeather(searchQuery)
 ```
 
 And when those operations run, the updated data will be pushed to the Flows through the `CompositionLocalProvider` and into the Composables, triggering a recomposition and update of the UI. This is a fully reactive architecture taking advantage of the tools Kotlin gives us for such an approach.
+
+### iOS
+
+Now, this is all well and good for Android, and we would expect it to work there because these are Kotlin and Android tools. But how well does it work with Swift and iOS? This is where things get interesting.
+
+
