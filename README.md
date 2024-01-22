@@ -47,7 +47,27 @@ class WeatherRepository: RepositoryBase() {
 }
 ```
 
-The first thing you'll notice is the `data` value, which is a `MutableStateFlow` containing the `WeatherData` class. Here's how that is defined:
+The first thing you'll notice is that the Repository has a base class. Here's what that looks like:
+
+```
+open class RepositoryBase: DIAware {
+    final override val di by DI.lazy {
+        importAll(
+            SharedModules.dataModule,
+            SharedModules.repositoriesModule
+        )
+    }
+
+    protected val googleMapsService: GoogleMapsService by di.instance()
+    protected val openWeatherService: OpenWeatherService by di.instance()
+
+    val error: MutableStateFlow<APIResponse.APIError?> = MutableStateFlow(null)
+}
+```
+
+All Repositories inherit from this class, which gives them access to the Service classes for making API calls (I use [ktor](https://ktor.io/) for network services, which allows these calls to be made entirely in the common module). If the app had a local database, a reference to that would also be here (cross-platform SQL database access in Android and iOS can be accomplished using [SQLDelight](https://github.com/cashapp/sqldelight)). There's also a single shared Flow called `error`; this is used to capture any errors encountered during network calls and other operations.
+
+Next is the `data` value, which is a `MutableStateFlow` containing the `WeatherData` class. Here's how that is defined:
 
 ```
 data class WeatherData(
