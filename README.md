@@ -132,3 +132,138 @@ open class SharedInterfaceBase(
 The main reason for this is to handle Coroutine Scopes. If the Shared Interface is being called from an Android app, we'll want to use a common Coroutine Scope depending on where it's used (like, for example, `viewModelScope`). But Swift in iOS doesn't have this concept, so I allow for it to be called without passing in a `scope`, which will resul in a default Scope being created.
 
 You can see in `SharedWeatherInterface` that the `searchWeather()` method launches inside of the defined Scope and calls `WeatherRepository.searchWeather()`. This then handles the API call and pushing of the resulting data to the appropriate Flow.
+
+## Bringing it all together
+
+Now that we undestand how the Repository and its associated Interface are build, and how they allow us to make network calls, manipulate data, and perform all of the operations necessary in the shared cross-platform module, we want to see it in action and understand how these pieces are actually used in a working app. Let's start with Android.
+
+### Android
+
+The core component for integrating into the native app is a class called `SharedRepositories`:
+
+```
+class SharedRepositories: DIAware {
+    override val di: DI by DI.lazy {
+        importAll(
+            SharedModules.dataModule,
+            SharedModules.repositoriesModule
+        )
+    }
+
+    val googleMapsRepository: GoogleMapsRepository by di.instance()
+    val weatherRepository: WeatherRepository by di.instance()
+}
+```
+
+As you can see, this is just a simple app that exposes the various Repositories. An instance of `SharedRepositories` is made available in our DI framework, allowing us to import it into the Android app's main ViewModel:
+
+```
+class MainActivityViewModel(
+    activity: Activity
+): ViewModel(), DIAware {
+    override val di by DI.lazy {
+        importAll(
+            AndroidModules.vmModule,
+            SharedModules.dataModule,
+            SharedModules.repositoriesModule
+        )
+    }
+
+    val sharedRepositories: SharedRepositories by di.instance()
+}
+```
+
+We then create instances of the Shared Interfaces within the VM:
+
+```
+    private val googleMapsInterface = SharedGoogleMapsInterface(
+        scope = viewModelScope,
+        sharedRepositories = sharedRepositories
+    )
+
+    private val weatherInterface = SharedWeatherInterface(
+        scope = viewModelScope,
+        sharedRepositories = sharedRepositories
+    )
+```
+
+And finally, to simplify integration into the UI, we have a single `RepositoryInterfaceContainer` class:
+
+```
+data class RepositoryInterfaceContainer(
+    val googleMapsInterface: SharedGoogleMapsInterface,
+    val weatherInterface: SharedWeatherInterface
+)
+```
+
+Which is created in the VM:
+
+```
+    val interfaces = RepositoryInterfaceContainer(
+        googleMapsInterface = googleMapsInterface,
+        weatherInterface = weatherInterface
+    )
+```
+
+There is also a corresponding container for data:
+
+```
+data class RepositoryDataContainer(
+    val googleMapsData: GoogleMapsData = GoogleMapsData(),
+    val weatherData: WeatherData = WeatherData()
+)
+```
+
+Now we're ready to pull it all together in `MainActivity`:
+
+```
+class MainActivity : ComponentActivity(), DIAware {
+    override val di by DI.lazy {
+        importAll(
+            AndroidModules.vmModule,
+            SharedModules.dataModule,
+            SharedModules.repositoriesModule
+        )
+    }
+
+    ...
+
+    private lateinit var viewModel: MainActivityViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+            ...
+            val vm: MainActivityViewModel by di.instance(
+                arg = this
+            )
+            viewModel = vm
+
+            setContent {
+                WeatherPlatformTheme {
+                    CompositionLocalProvider(
+                        LocalRepositoryContent provides RepositoryContent(
+                            data = RepositoryDataContainer(
+                                googleMapsData = viewModel.sharedRepositories.googleMapsRepository.data.collectAsState().value,
+                                weatherData = viewModel.sharedRepositories.weatherRepository.data.collectAsState().value
+                            ),
+                            interfaces = viewModel.interfaces
+                        )
+                    ) {
+                        MainScreen(
+                            onLocationClicked = {
+                                if (permissionsRequest.checkPermissions(this)) {
+                                    withContext(Dispatchers.Main) {
+                                        viewModel.updateLocation()
+                                    }
+                                }
+                            }
+                        )
+                    }
+                }
+            }
+    }
+```
+
+Two things to note here:
+
+1. The data from the repositories uses `collectAsState()` to convert the Flows to a `State` class appropriate for use in Jetpack Compose. This is what allows the reactive UI framework to automatically update itself as new data is pushed to the Flows. It should be familiar to any Android developer who has used Flows with Compose.
+2. I use a `CompositionLocalProvider` to send the data and interfaces to the Compose scope. This is a convenient tool that allows `RepositoryContent` to become part of the general environment in Compose, ready to pull out any time we need it, instead of having to pass a bunch of different objects into the Composable signatures.
