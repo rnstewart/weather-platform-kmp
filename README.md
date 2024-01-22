@@ -61,3 +61,54 @@ This data class represents the data values we will want to update and use for di
 1. It updates the `loading` value and pushes that change. This is used in the UI to display a progress spinner while the data is loading.
 2. It makes a network call to the weather API to get weather conditions for the String value `query`.
 3. When it receives a response, it pulls the data from that response and pushes it to the Flow so it can be displayed in the UI (note that it also sets `loading` to false when it pushes the result of the API call).
+
+### Interfaces
+
+Each Repository has a corresponding interface to perform operations on it. Here is the interface for `WeatherRepository`:
+
+```
+interface WeatherInterface {
+    fun searchWeather(
+        query: String = "",
+        latitude: Double? = null,
+        longitude: Double? = null
+    )
+}
+```
+
+This interface is implemented in a *Shared Interface* class, like this:
+
+```
+class SharedWeatherInterface(
+    scope: CoroutineScope?,
+    private val sharedRepositories: SharedRepositories
+): SharedInterfaceBase(scope = scope), WeatherInterface {
+    override fun searchWeather(query: String, latitude: Double?, longitude: Double?) {
+        coroutineScope.launch {
+            sharedRepositories.weatherRepository.searchWeather(
+                query = query,
+                latitude = latitude,
+                longitude = longitude
+            )
+        }
+    }
+}
+```
+
+The Shared Interface is what will be used across platforms to provide the same functionality. Note that it has a base class:
+
+```
+open class SharedInterfaceBase(
+    scope: CoroutineScope?
+) {
+    val coroutineScope = scope ?: CoroutineScope(BackgroundDispatcher + Job())
+
+    fun cancel() {
+        coroutineScope.cancel()
+    }
+}
+```
+
+The main reason for this is to handle Coroutine Scopes. If the Shared Interface is being called from an Android app, we'll want to use a common Coroutine Scope depending on where it's used (like, for example, `viewModelScope`). But Swift in iOS doesn't have this concept, so I allow for it to be called without passing in a `scope`, which will resul in a default Scope being created.
+
+You can see in `SharedWeatherInterface` that the `searchWeather()` method launches inside of the defined Scope and calls `WeatherRepository.searchWeather()`. This then handles the API call and pushing of the resulting data to the appropriate Flow.
