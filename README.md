@@ -375,3 +375,5 @@ struct ContentView: View {
         }
 }
 ```
+
+So when the SwiftUI struct for `ContentView` loads, it creates `weatherInterface` and calls the associated `setup()` function, which then attaches the Flow to the `data` field, which I observe in the struct. I can then call the Interface functions like `searchWeather()` on the Interface class, which will call down to the Repository, updating the data, and triggering a refresh of the UI when the new data is emitted.
