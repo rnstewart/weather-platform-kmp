@@ -90,7 +90,7 @@ fun WeatherSearchScreen(
                     Image(
                         imageVector = Icons.Filled.List,
                         contentDescription = null,
-                        colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.surfaceVariant)
+                        colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.primary)
                     )
                 }
 
@@ -104,7 +104,7 @@ fun WeatherSearchScreen(
                     Image(
                         imageVector = Icons.Filled.Search,
                         contentDescription = null,
-                        colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.surfaceVariant)
+                        colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.primary)
                     )
                 }
             } else {
@@ -118,7 +118,7 @@ fun WeatherSearchScreen(
                     Image(
                         imageVector = Icons.Filled.LocationOn,
                         contentDescription = null,
-                        colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.surfaceVariant)
+                        colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.primary)
                     )
                 }
             }
