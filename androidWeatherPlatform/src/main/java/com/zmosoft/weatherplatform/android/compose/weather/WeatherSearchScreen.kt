@@ -10,7 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -48,7 +48,6 @@ fun WeatherSearchScreen(
 
     Column(
         modifier = modifier
-            .background(color = Color.White)
             .padding(16.dp)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -89,7 +88,8 @@ fun WeatherSearchScreen(
                 ) {
                     Image(
                         imageVector = Icons.Filled.List,
-                        contentDescription = null
+                        contentDescription = null,
+                        colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.surfaceVariant)
                     )
                 }
 
@@ -102,7 +102,8 @@ fun WeatherSearchScreen(
                 ) {
                     Image(
                         imageVector = Icons.Filled.Search,
-                        contentDescription = null
+                        contentDescription = null,
+                        colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.surfaceVariant)
                     )
                 }
             } else {
@@ -115,120 +116,125 @@ fun WeatherSearchScreen(
                 ) {
                     Image(
                         imageVector = Icons.Filled.LocationOn,
-                        contentDescription = null
+                        contentDescription = null,
+                        colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.surfaceVariant)
                     )
                 }
             }
         }
 
-        if (loading) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(80.dp)
-            )
-        } else if (autocompleteResults.isNotEmpty()) {
-            LazyColumn(
-                modifier = Modifier
-                    .weight(1.0f)
-                    .fillMaxWidth(),
-                content = {
-                    itemsIndexed(items = autocompleteResults) { i, prediction ->
-                        if (i > 0) {
-                            Divider()
-                        }
+        when {
+            loading -> {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(80.dp)
+                )
+            }
+            autocompleteResults.isNotEmpty() -> {
+                LazyColumn(
+                    modifier = Modifier
+                        .weight(1.0f)
+                        .fillMaxWidth(),
+                    content = {
+                        itemsIndexed(items = autocompleteResults) { i, prediction ->
+                            if (i > 0) {
+                                Divider()
+                            }
 
-                        Row(
-                            modifier = Modifier
-                                .clickable {
-                                    interfaces?.googleMapsInterface?.autocompleteResultSelected(
-                                        prediction
+                            Row(
+                                modifier = Modifier
+                                    .clickable {
+                                        interfaces?.googleMapsInterface?.autocompleteResultSelected(
+                                            prediction
+                                        )
+                                    }
+                                    .padding(8.dp)
+                                    .fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = prediction.description ?: "",
+                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                        fontWeight = FontWeight.SemiBold
                                     )
-                                }
-                                .padding(8.dp)
-                                .fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = prediction.description ?: "",
-                                style = MaterialTheme.typography.bodyMedium.copy(
-                                    fontWeight = FontWeight.SemiBold
                                 )
-                            )
-                            Spacer(modifier = Modifier.weight(1.0f))
+                                Spacer(modifier = Modifier.weight(1.0f))
+                            }
                         }
                     }
-                }
-            )
-        } else if (weatherData != null) {
-            Text(
-                modifier = Modifier.padding(bottom = 16.dp),
-                text = weatherData.name ?: "",
-                style = MaterialTheme.typography.headlineMedium
-            )
+                )
+            }
+            weatherData != null -> {
+                Text(
+                    modifier = Modifier.padding(bottom = 16.dp),
+                    text = weatherData.name ?: "",
+                    style = MaterialTheme.typography.headlineMedium
+                )
 
-            val context = LocalContext.current
-            Row(
-                modifier = Modifier.padding(bottom = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column {
-                    Text(
-                        text = weatherData.getCurrentTempStr(context) ?: "",
-                        style = MaterialTheme.typography.headlineSmall
-                    )
-                    Text(
-                        text = weatherData.currentWeatherCondition
-                    )
+                val context = LocalContext.current
+                Row(
+                    modifier = Modifier.padding(bottom = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
+                        Text(
+                            text = weatherData.getCurrentTempStr(context) ?: "",
+                            style = MaterialTheme.typography.headlineSmall
+                        )
+                        Text(
+                            text = weatherData.currentWeatherCondition
+                        )
+                    }
+                    val weatherIconUrl = weatherData.getWeatherIconUrl(context)
+                    if (weatherIconUrl?.isNotEmpty() == true) {
+                        Image(
+                            modifier = Modifier.size(40.dp),
+                            painter = rememberImagePainter(weatherIconUrl),
+                            contentDescription = null,
+                            contentScale = ContentScale.Fit
+                        )
+                    }
+                    Spacer(modifier = Modifier.weight(1.0f))
                 }
-                val weatherIconUrl = weatherData.getWeatherIconUrl(context)
-                if (weatherIconUrl?.isNotEmpty() == true) {
-                    Image(
-                        modifier = Modifier.size(40.dp),
-                        painter = rememberImagePainter(weatherIconUrl),
-                        contentDescription = null,
-                        contentScale = ContentScale.Fit
-                    )
+
+                Row(
+                    modifier = Modifier.padding(vertical = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Spacer(modifier = Modifier.weight(1.0f))
+                    weatherData.getWindIcon(context)?.let { windIcon ->
+                        Image(
+                            painter = painterResource(id = windIcon),
+                            contentDescription = null
+                        )
+                    }
+                    Text(text = weatherData.getWindStr(context))
+                    Spacer(modifier = Modifier.weight(1.0f))
+                }
+
+                Row(
+                    modifier = Modifier.padding(vertical = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Spacer(modifier = Modifier.weight(1.0f))
+                    weatherData.sunriseIcon?.let { sunriseIcon ->
+                        Image(
+                            painter = painterResource(id = sunriseIcon),
+                            contentDescription = null
+                        )
+                        Text(text = weatherData.sunriseStr)
+                    }
+                    Spacer(modifier = Modifier.weight(1.0f))
+                    weatherData.sunsetIcon?.let { sunsetIcon ->
+                        Image(
+                            painter = painterResource(id = sunsetIcon),
+                            contentDescription = null
+                        )
+                        Text(text = weatherData.sunsetStr)
+                    }
+                    Spacer(modifier = Modifier.weight(1.0f))
                 }
                 Spacer(modifier = Modifier.weight(1.0f))
             }
-
-            Row(
-                modifier = Modifier.padding(vertical = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Spacer(modifier = Modifier.weight(1.0f))
-                weatherData.getWindIcon(context)?.let { windIcon ->
-                    Image(
-                        painter = painterResource(id = windIcon),
-                        contentDescription = null
-                    )
-                }
-                Text(text = weatherData.getWindStr(context))
-                Spacer(modifier = Modifier.weight(1.0f))
-            }
-
-            Row(
-                modifier = Modifier.padding(vertical = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Spacer(modifier = Modifier.weight(1.0f))
-                weatherData.sunriseIcon?.let { sunriseIcon ->
-                    Image(
-                        painter = painterResource(id = sunriseIcon),
-                        contentDescription = null
-                    )
-                    Text(text = weatherData.sunriseStr)
-                }
-                Spacer(modifier = Modifier.weight(1.0f))
-                weatherData.sunsetIcon?.let { sunsetIcon ->
-                    Image(
-                        painter = painterResource(id = sunsetIcon),
-                        contentDescription = null
-                    )
-                    Text(text = weatherData.sunsetStr)
-                }
-                Spacer(modifier = Modifier.weight(1.0f))
-            }
-            Spacer(modifier = Modifier.weight(1.0f))
         }
     }
 }
@@ -245,7 +251,9 @@ fun PreviewWeatherSearchScreen() {
             )
         )
     ) {
-        WeatherPlatformTheme {
+        WeatherPlatformTheme(
+            darkTheme = true
+        ) {
             WeatherSearchScreen(
                 onLocationClicked = {}
             )

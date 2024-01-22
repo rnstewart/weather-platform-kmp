@@ -24,13 +24,15 @@ fun WeatherPlatformTheme(
         darkColorScheme(
             primary = Color(0xFFBB86FC),
             secondary = Color(0xFF03DAC5),
-            tertiary = Color(0xFF3700B3)
+            tertiary = Color(0xFF3700B3),
+            background = Color.Black
         )
     } else {
         lightColorScheme(
             primary = Color(0xFF6200EE),
             secondary = Color(0xFF03DAC5),
-            tertiary = Color(0xFF3700B3)
+            tertiary = Color(0xFF3700B3),
+            background = Color.White
         )
     }
     val typography = Typography(
