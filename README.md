@@ -286,4 +286,4 @@ Operations on the Repositories can be accessed by the Interface functions from i
 interfaces?.weatherInterface?.searchWeather(searchQuery)
 ```
 
-And when those operations run, the updated data will be pushed to the Flows through the `CompositionLocalProvider` and into the Composables, triggering a recomposition and update of the UI.
+And when those operations run, the updated data will be pushed to the Flows through the `CompositionLocalProvider` and into the Composables, triggering a recomposition and update of the UI. This is a fully reactive architecture taking advantage of the tools Kotlin gives us for such an approach.
