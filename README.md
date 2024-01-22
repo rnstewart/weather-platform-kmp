@@ -292,4 +292,4 @@ And when those operations run, the updated data will be pushed to the Flows thro
 
 Now, this is all well and good for Android, and we would expect it to work there because these are Kotlin and Android tools. But how well does it work with Swift and iOS? This is where things get interesting.
 
-
+I should qualify this by saying I am primarily an Android/Kotlin developer. I'm pretty new to Swift and iOS, so I know my skills there are still lacking. But I was pleasantly surprised with how easy it was to transition from Kotlin to Swift, and while the iOS APIs are dramtically different from the Android ones, the advantage of KMP is that the majority of code can be written in Kotlin, so this minimizes the amount of native Swift/iOS knowledge I needed to get the job done. What I have her works very well, but I'm sure there's plenty of room for imporovement.
