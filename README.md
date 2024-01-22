@@ -267,3 +267,23 @@ Two things to note here:
 
 1. The data from the repositories uses `collectAsState()` to convert the Flows to a `State` class appropriate for use in Jetpack Compose. This is what allows the reactive UI framework to automatically update itself as new data is pushed to the Flows. It should be familiar to any Android developer who has used Flows with Compose.
 2. I use a `CompositionLocalProvider` to send the data and interfaces to the Compose scope. This is a convenient tool that allows `RepositoryContent` to become part of the general environment in Compose, ready to pull out any time we need it, instead of having to pass a bunch of different objects into the Composable signatures.
+
+Now the Interfaces and data objects are easily accessible to all Composables in our app. They can be retrieved like this:
+```
+fun WeatherSearchScreen(
+    modifier: Modifier = Modifier,
+    onLocationClicked: suspend () -> Unit
+) {
+    val content = LocalRepositoryContent.current
+    val interfaces = content.interfaces
+    val data = content.data
+    val weatherData = data.weatherData.data
+}
+```
+
+Operations on the Repositories can be accessed by the Interface functions from inside compose:
+```
+interfaces?.weatherInterface?.searchWeather(searchQuery)
+```
+
+And when those operations run, the updated data will be pushed to the Flows through the `CompositionLocalProvider` and into the Composables, triggering a recomposition and update of the UI.
