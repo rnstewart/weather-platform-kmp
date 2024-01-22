@@ -293,3 +293,85 @@ And when those operations run, the updated data will be pushed to the Flows thro
 Now, this is all well and good for Android, and we would expect it to work there because these are Kotlin and Android tools. But how well does it work with Swift and iOS? This is where things get interesting.
 
 I should qualify this by saying I am primarily an Android/Kotlin developer. I'm pretty new to Swift and iOS, so I know my skills there are still lacking. But I was pleasantly surprised with how easy it was to transition from Kotlin to Swift, and while the iOS APIs are dramtically different from the Android ones, the advantage of KMP is that the majority of code can be written in Kotlin, so this minimizes the amount of native Swift/iOS knowledge I needed to get the job done. What I have her works very well, but I'm sure there's plenty of room for improvement.
+
+### Concurrency on iOS: `await` and Coroutines
+
+The first and most important thing to tackle here is concurrency. All of the Kotlin concurrency code uses Coroutines of course, but Swift doesn't have an awareness of Kotlin Coroutines. Even if it did, the Kotlin code doesn't compile to Swift on iOS; it compiles to Objective-C (JetBrains is working on this, fortunately). So at first you might think that handling concurrency between Kotlin Native and Swift is going to be a big mess.
+
+It turns out that's not the case, though. While Swift doesn't have Coroutines as Kotlin developers know it, it does have a [concurrency model](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/) that is very similar, with `Tasks` and the `await` keyword. The conceptual similarities are so strong that Kotlin Native Coroutines translate pretty directly to Swift async tasks. This makes our job a lot easier. There are some problems with job cancellation, but Touchlab has a nice library called [SKIE](https://skie.touchlab.co/) that alleviates these problems (along with a few others).
+
+So in order to use a Kotlin `MutableStateFlow` in Swift, all we really need to do is declare a `Task` and use the `await` keyword to listen for the result. This, combined with the `ObservableObject` class and the `@Published` annotation in SwiftUI give us pretty much exactly the same result as `collectAsState()` in Jetpack Compose. When the underlying Repository runs a mutation function and emits new data, that data is pushed to the appropriate published object in Swift and it triggers an update in the reactive SwiftUI code.
+
+In order to make this work, I have to add one more layer on top of the Shared Interface specifically for Swift: an *Observable* Interface. Here's an example:
+
+```
+class ObservableWeatherInterface: ObservableObject, WeatherInterface {
+    private let repositories: Repositories = Repositories()
+    
+    private let sharedWeatherInterface: SharedWeatherInterface
+    
+    @Published
+    private(set) var data: WeatherData
+
+    init() {
+        let sharedRepositories: SharedRepositories = repositories.sharedRepositories
+        let repo = sharedRepositories.weatherRepository
+        self.data = repo.data.value
+        self.sharedWeatherInterface = SharedWeatherInterface(
+            scope: nil,
+            sharedRepositories: sharedRepositories
+        )
+    }
+
+    func setup() {
+        Task.detached {
+            for await dataFlow in self.repositories.sharedRepositories.weatherRepository.data {
+                DispatchQueue.main.async {
+                    self.data = dataFlow
+                }
+            }
+        }
+    }
+
+    func searchWeather(query: String, latitude: KotlinDouble?, longitude: KotlinDouble?) {
+        sharedWeatherInterface.searchWeather(query: query, latitude: latitude, longitude: longitude)
+    }
+}
+```
+
+As you can see, this inherits from `ObservableObject`, which allows us to use it as a `StateObject` in a SwiftUi struct, and it implements the base `WeatherInterface`. This means it has all of the same functions as `SharedWeatherInterface`; they just act as pass-through functions to the Shared Interface functions which operate on the Repository itself.
+
+There is one other new thing here: the `Repositories` class. This is just a simple helper class created in the Kotlin shared module specifically for iOS:
+
+```
+class Repositories: DIAware {
+    override val di by DI.lazy {
+        importAll(
+            SharedModules.dataModule,
+            SharedModules.repositoriesModule
+        )
+    }
+
+    val sharedRepositories: SharedRepositories by di.instance()
+}
+```
+
+Writing it this way makes it easy to declare in a Swift class, and you can see how I do that at the top of `ObservableWeatherInterface`. Once I have the `repositories` object, I can pull `sharedRepositories` out of it and use it in `init()` to create the `SharedWeatherInterface`. After that, I simply need to call `setup()`, which creates a Swift `Task` and sets up an asynchronous watcher on the `data` Flow. Any time new data is pushed to that Flow, the watcher responds and updates the Published `data` field in this class, which will trigger an update in the SwiftUI code. Here's how the class is used:
+
+```
+struct ContentView: View {
+    @StateObject var weatherInterface: ObservableWeatherInterface = ObservableWeatherInterface()
+
+    ...
+
+        var body: some View {
+            let weatherData = weatherInterface.data
+
+            VStack {
+                // UI code using weatherData
+            }.onAppear {
+                weatherInterface.setup()
+            }
+        }
+}
+```
