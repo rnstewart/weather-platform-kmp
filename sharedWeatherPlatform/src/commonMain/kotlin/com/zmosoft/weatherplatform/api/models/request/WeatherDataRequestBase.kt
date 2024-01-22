@@ -1,6 +1,7 @@
 package com.zmosoft.weatherplatform.api.models.request
 
-import io.ktor.http.*
+import io.ktor.http.ContentType
+import io.ktor.http.HttpMethod
 
 open class WeatherDataRequestBase(
     override val method: HttpMethod,

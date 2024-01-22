@@ -1,8 +1,6 @@
 package com.zmosoft.weatherplatform.android.mvvm.viewmodels
 
-import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.LocationServices

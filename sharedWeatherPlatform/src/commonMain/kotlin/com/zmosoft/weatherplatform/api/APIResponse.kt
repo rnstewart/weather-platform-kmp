@@ -1,8 +1,9 @@
 package com.zmosoft.weatherplatform.api
 
 import com.zmosoft.weatherplatform.api.models.response.ResponseBase
-import io.ktor.client.plugins.*
-import io.ktor.http.*
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.isSuccess
 
 data class APIResponse<T : ResponseBase>(
     val data: T? = null,

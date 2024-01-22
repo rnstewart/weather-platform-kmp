@@ -1,6 +1,5 @@
 package com.zmosoft.weatherplatform.repositories
 
-import com.zmosoft.weatherplatform.api.APIResponse
 import com.zmosoft.weatherplatform.repositories.data.WeatherData
 import com.zmosoft.weatherplatform.utils.BackgroundDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow

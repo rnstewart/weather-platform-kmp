@@ -1,7 +1,6 @@
 package com.zmosoft.weatherplatform.repositories.interfaces
 
 import com.zmosoft.weatherplatform.api.models.response.geo.AutocompletePlacesData
-import com.zmosoft.weatherplatform.repositories.WeatherRepository
 
 interface GoogleMapsInterface {
     fun placesAutoComplete(

@@ -1,8 +1,7 @@
 package com.zmosoft.weatherplatform.api.models.request
 
 import com.zmosoft.weatherplatform.api.APIKeys
-import io.ktor.client.request.*
-import io.ktor.http.*
+import io.ktor.http.HttpMethod
 
 class WeatherDataRequest(
     query: String = "",

@@ -1,7 +1,6 @@
 package com.zmosoft.weatherplatform.android.di
 
 import android.app.Activity
-import com.zmosoft.weatherplatform.android.WeatherPlatformApplication
 import com.zmosoft.weatherplatform.android.mvvm.viewmodels.MainActivityViewModel
 import org.kodein.di.*
 

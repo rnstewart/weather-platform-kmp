@@ -1,15 +1,10 @@
 package com.zmosoft.weatherplatform.di
 
-import com.zmosoft.weatherplatform.api.ApiConfig
-import com.zmosoft.weatherplatform.api.GoogleMapsService
-import com.zmosoft.weatherplatform.api.OpenWeatherService
+import com.zmosoft.weatherplatform.api.*
 import com.zmosoft.weatherplatform.data.SharedRepositories
 import com.zmosoft.weatherplatform.repositories.GoogleMapsRepository
 import com.zmosoft.weatherplatform.repositories.WeatherRepository
-import org.kodein.di.DI
-import org.kodein.di.bind
-import org.kodein.di.instance
-import org.kodein.di.singleton
+import org.kodein.di.*
 
 object SharedModules {
     private val sharedRepositories by lazy {

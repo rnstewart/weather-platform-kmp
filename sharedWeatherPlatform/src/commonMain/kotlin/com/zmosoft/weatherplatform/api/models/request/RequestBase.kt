@@ -1,9 +1,9 @@
 package com.zmosoft.weatherplatform.api.models.request
 
-import io.ktor.client.request.*
-import io.ktor.http.*
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonObject
+import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.parameter
+import io.ktor.http.ContentType
+import io.ktor.http.HttpMethod
 
 abstract class RequestBase(
     open val method: HttpMethod,

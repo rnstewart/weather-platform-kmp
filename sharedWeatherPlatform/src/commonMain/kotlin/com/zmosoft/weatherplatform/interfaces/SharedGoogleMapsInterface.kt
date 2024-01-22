@@ -2,7 +2,6 @@ package com.zmosoft.weatherplatform.interfaces
 
 import com.zmosoft.weatherplatform.api.models.response.geo.AutocompletePlacesData
 import com.zmosoft.weatherplatform.data.SharedRepositories
-import com.zmosoft.weatherplatform.repositories.WeatherRepository
 import com.zmosoft.weatherplatform.repositories.interfaces.GoogleMapsInterface
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

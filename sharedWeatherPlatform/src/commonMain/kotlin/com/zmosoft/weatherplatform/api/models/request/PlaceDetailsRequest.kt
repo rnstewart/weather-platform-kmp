@@ -1,6 +1,6 @@
 package com.zmosoft.weatherplatform.api.models.request
 
-import io.ktor.http.*
+import io.ktor.http.HttpMethod
 
 class PlaceDetailsRequest(
     placeId: String,
