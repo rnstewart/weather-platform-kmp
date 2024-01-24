@@ -1,6 +1,6 @@
 [versions]
 activityCompose = "1.8.2"
-agp = "8.2.1"
+agp = "8.2.2"
 appcompat = "1.6.1"
 coilCompose = "1.4.0"
 google-services = "4.4.0"
