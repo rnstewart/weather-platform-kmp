@@ -18,10 +18,14 @@ class ObservableWeatherState: ObservableObject, WeatherInterface {
     @Published
     private(set) var data: WeatherData
     
+    @Published
+    private(set) var loading: Bool
+    
     init() {
         let sharedRepositories: SharedRepositories = repositories.sharedRepositories
         let repo = sharedRepositories.weatherRepository
         self.data = repo.data.value
+        self.loading = false
         self.weatherState = WeatherRepositoryState(
             scope: nil,
             sharedRepositories: sharedRepositories
@@ -33,6 +37,11 @@ class ObservableWeatherState: ObservableObject, WeatherInterface {
             for await dataFlow in self.repositories.sharedRepositories.weatherRepository.data {
                 DispatchQueue.main.async {
                     self.data = dataFlow
+                }
+            }
+            for await loading in self.weatherState.loading {
+                DispatchQueue.main.async {
+                    self.loading = loading.boolValue
                 }
             }
         }

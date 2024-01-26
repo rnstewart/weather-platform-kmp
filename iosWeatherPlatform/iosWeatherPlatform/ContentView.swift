@@ -11,7 +11,7 @@ struct ContentView: View {
     var body: some View {
         let weatherData = weatherState.data
         let googleMapsData = googleMapsState.data
-        let isLoading: Bool = googleMapsState.data.loading || weatherState.data.loading
+        let isLoading: Bool = googleMapsState.loading || weatherState.loading
         
         VStack {
             HStack {
