@@ -12,22 +12,16 @@ class WeatherRepository: RepositoryBase() {
         query: String = ""
     ) {
         withContext (BackgroundDispatcher) {
-            data.emit(
-                data.value.copy(
-                    loading = true
-                )
-            )
             val response = openWeatherService.getCurrentWeatherData(
                 query = query
             )
 
             data.emit(
                 data.value.copy(
-                    data = response.data,
-                    loading = false
+                    data = response.data
                 )
             )
-            error.emit(response.error)
+            error.emit(response.error?.error)
         }
     }
 
@@ -36,11 +30,6 @@ class WeatherRepository: RepositoryBase() {
         longitude: Double? = null
     ) {
         withContext (BackgroundDispatcher) {
-            data.emit(
-                data.value.copy(
-                    loading = true
-                )
-            )
             val response = openWeatherService.getCurrentWeatherData(
                 latitude = latitude,
                 longitude = longitude
@@ -48,11 +37,10 @@ class WeatherRepository: RepositoryBase() {
 
             data.emit(
                 data.value.copy(
-                    data = response.data,
-                    loading = false
+                    data = response.data
                 )
             )
-            error.emit(response.error)
+            error.emit(response.error?.error)
         }
     }
 }

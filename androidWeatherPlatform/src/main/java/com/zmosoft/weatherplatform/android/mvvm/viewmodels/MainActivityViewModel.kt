@@ -27,12 +27,12 @@ class MainActivityViewModel(
 
     val sharedRepositories: SharedRepositories by di.instance()
 
-    private val googleMapsState = GoogleMapsRepositoryState(
+    val googleMapsState = GoogleMapsRepositoryState(
         scope = viewModelScope,
         sharedRepositories = sharedRepositories
     )
 
-    private val weatherState = WeatherRepositoryState(
+    val weatherState = WeatherRepositoryState(
         scope = viewModelScope,
         sharedRepositories = sharedRepositories
     )

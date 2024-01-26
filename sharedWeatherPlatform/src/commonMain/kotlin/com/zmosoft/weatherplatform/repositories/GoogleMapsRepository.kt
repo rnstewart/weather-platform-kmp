@@ -19,11 +19,6 @@ class GoogleMapsRepository: RepositoryBase() {
         longitude: Double? = null
     ) {
         withContext (BackgroundDispatcher) {
-            data.emit(
-                data.value.copy(
-                    loading = true
-                )
-            )
             val response = googleMapsService.placesAutoComplete(
                 input = input,
                 latitude = latitude,
@@ -32,11 +27,10 @@ class GoogleMapsRepository: RepositoryBase() {
 
             data.emit(
                 data.value.copy(
-                    autocompletePredictions = response.data?.predictions ?: listOf(),
-                    loading = false
+                    autocompletePredictions = response.data?.predictions ?: listOf()
                 )
             )
-            error.emit(response.error)
+            error.emit(response.error?.error)
         }
     }
 
@@ -62,7 +56,7 @@ class GoogleMapsRepository: RepositoryBase() {
                         longitude
                     )
                 } else {
-                    error.emit(response.error)
+                    error.emit(response.error?.error)
                     null
                 }
             } else {
@@ -80,11 +74,10 @@ class GoogleMapsRepository: RepositoryBase() {
 
             data.emit(
                 data.value.copy(
-                    placeDetails = response.data?.result,
-                    loading = false
+                    placeDetails = response.data?.result
                 )
             )
-            error.emit(response.error)
+            error.emit(response.error?.error)
         }
     }
 }

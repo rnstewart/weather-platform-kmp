@@ -16,5 +16,5 @@ open class RepositoryBase: DIAware {
     protected val googleMapsService: GoogleMapsService by di.instance()
     protected val openWeatherService: OpenWeatherService by di.instance()
 
-    val error: MutableStateFlow<APIResponse.APIError?> = MutableStateFlow(null)
+    val error: MutableStateFlow<String?> = MutableStateFlow(null)
 }

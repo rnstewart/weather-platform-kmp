@@ -11,6 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -24,7 +25,7 @@ import coil.compose.rememberImagePainter
 import com.zmosoft.weatherplatform.android.R
 import com.zmosoft.weatherplatform.android.compose.WeatherPlatformTheme
 import com.zmosoft.weatherplatform.android.utils.*
-import com.zmosoft.weatherplatform.repositories.RepositoryDataContainer
+import com.zmosoft.weatherplatform.repositories.*
 import com.zmosoft.weatherplatform.repositories.data.WeatherData
 import kotlinx.coroutines.launch
 
@@ -38,7 +39,8 @@ fun WeatherSearchScreen(
     val data = content.data
     val weatherData = data.weatherData.data
     val autocompleteResults = data.googleMapsData.autocompletePredictions
-    val loading = (data.googleMapsData.loading || data.weatherData.loading)
+    val loading = (content.loadingState.googleMaps || content.loadingState.weather)
+    val error = (content.errorState.googleMaps ?: content.errorState.weather)
     val focusManager = LocalFocusManager.current
 
     val coroutineScope = rememberCoroutineScope()
@@ -237,6 +239,29 @@ fun WeatherSearchScreen(
                 Spacer(modifier = Modifier.weight(1.0f))
             }
         }
+
+        error?.let {
+            Card {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        modifier = Modifier.padding(end = 16.dp),
+                        imageVector = Icons.Filled.Warning,
+                        contentDescription = null,
+                        colorFilter = ColorFilter.tint(color = Color.Red)
+                    )
+
+                    Text(
+                        text = error,
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -249,6 +274,12 @@ fun PreviewWeatherSearchScreen() {
                 weatherData = WeatherData(
                     data = ComposeTestData.weatherData
                 )
+            ),
+            loadingState = LoadingState(
+                weather = false
+            ),
+            errorState = ErrorState(
+                weather = "Not Found"
             )
         )
     ) {
