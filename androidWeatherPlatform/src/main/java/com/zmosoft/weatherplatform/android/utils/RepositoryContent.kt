@@ -2,11 +2,11 @@ package com.zmosoft.weatherplatform.android.utils
 
 import androidx.compose.runtime.compositionLocalOf
 import com.zmosoft.weatherplatform.repositories.RepositoryDataContainer
-import com.zmosoft.weatherplatform.repositories.RepositoryInterfaceContainer
+import com.zmosoft.weatherplatform.repositories.RepositoryStateContainer
 
 data class RepositoryContent(
     val data: RepositoryDataContainer = RepositoryDataContainer(),
-    val interfaces: RepositoryInterfaceContainer? = null
+    val interfaces: RepositoryStateContainer? = null
 )
 
 data class MainScreenNavInterface(

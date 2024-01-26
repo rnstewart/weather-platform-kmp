@@ -83,7 +83,7 @@ fun WeatherSearchScreen(
                 IconButton(
                     onClick = {
                         focusManager.clearFocus()
-                        interfaces?.googleMapsInterface?.placesAutoComplete(searchQuery)
+                        interfaces?.googleMapsState?.placesAutoComplete(searchQuery)
                     },
                     enabled = !loading
                 ) {
@@ -97,7 +97,7 @@ fun WeatherSearchScreen(
                 IconButton(
                     onClick = {
                         focusManager.clearFocus()
-                        interfaces?.weatherInterface?.searchWeather(searchQuery)
+                        interfaces?.weatherState?.searchWeatherByName(query = searchQuery)
                     },
                     enabled = !loading
                 ) {
@@ -144,7 +144,7 @@ fun WeatherSearchScreen(
                             Row(
                                 modifier = Modifier
                                     .clickable {
-                                        interfaces?.googleMapsInterface?.autocompleteResultSelected(
+                                        interfaces?.googleMapsState?.autocompleteResultSelected(
                                             prediction
                                         )
                                     }

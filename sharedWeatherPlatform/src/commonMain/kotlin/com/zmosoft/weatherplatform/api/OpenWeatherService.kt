@@ -8,7 +8,7 @@ class OpenWeatherService(
 ) : Api(
     baseUrl = apiKeys.openWeatherMap.apiHost
 ) {
-    suspend fun getCurrentWeatherDataByLocation(query: String = "", latitude: Double? = null, longitude: Double? = null): APIResponse<WeatherDataResponse> {
+    suspend fun getCurrentWeatherData(query: String = "", latitude: Double? = null, longitude: Double? = null): APIResponse<WeatherDataResponse> {
         return apiCall(
             WeatherDataRequest(
                 query = query,

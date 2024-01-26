@@ -8,8 +8,30 @@ import kotlinx.coroutines.withContext
 class WeatherRepository: RepositoryBase() {
     val data = MutableStateFlow(WeatherData())
 
-    suspend fun searchWeather(
-        query: String = "",
+    suspend fun searchWeatherByName(
+        query: String = ""
+    ) {
+        withContext (BackgroundDispatcher) {
+            data.emit(
+                data.value.copy(
+                    loading = true
+                )
+            )
+            val response = openWeatherService.getCurrentWeatherData(
+                query = query
+            )
+
+            data.emit(
+                data.value.copy(
+                    data = response.data,
+                    loading = false
+                )
+            )
+            error.emit(response.error)
+        }
+    }
+
+    suspend fun searchWeatherByLocation(
         latitude: Double? = null,
         longitude: Double? = null
     ) {
@@ -19,8 +41,7 @@ class WeatherRepository: RepositoryBase() {
                     loading = true
                 )
             )
-            val response = openWeatherService.getCurrentWeatherDataByLocation(
-                query = query,
+            val response = openWeatherService.getCurrentWeatherData(
                 latitude = latitude,
                 longitude = longitude
             )

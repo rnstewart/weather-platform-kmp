@@ -41,32 +41,32 @@ class GoogleMapsRepository: RepositoryBase() {
     }
 
     suspend fun autocompleteResultSelected(
-        location: AutocompletePlacesData.Prediction,
-        weatherRepository: WeatherRepository
-    ) {
-        withContext (BackgroundDispatcher) {
+        location: AutocompletePlacesData.Prediction
+    ): Pair<Double, Double>? {
+        return withContext (BackgroundDispatcher) {
             val placeId = location.placeId
             if (placeId?.isNotEmpty() == true) {
                 val response = googleMapsService.placeDetails(placeId = placeId)
                 val locationResult = response.data?.result?.geometry?.location
-                if (locationResult != null) {
-                    val latitude = locationResult.latitude
-                    val longitude = locationResult.longitude
-                    if (latitude != null && longitude != null) {
-                        weatherRepository.searchWeather(
-                            latitude = latitude,
-                            longitude = longitude
-                        )
-                    }
+                val latitude = locationResult?.latitude
+                val longitude = locationResult?.longitude
+                if (latitude != null && longitude != null) {
                     data.emit(
                         data.value.copy(
                             autocompletePredictions = listOf(),
                             placeDetails = response.data.result
                         )
                     )
+                    Pair(
+                        latitude,
+                        longitude
+                    )
                 } else {
                     error.emit(response.error)
+                    null
                 }
+            } else {
+                null
             }
         }
     }

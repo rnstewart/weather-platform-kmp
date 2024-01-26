@@ -6,10 +6,10 @@ import com.zmosoft.weatherplatform.repositories.interfaces.GoogleMapsInterface
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-class SharedGoogleMapsInterface(
+class GoogleMapsRepositoryState(
     scope: CoroutineScope?,
     private val sharedRepositories: SharedRepositories
-): SharedInterfaceBase(scope = scope), GoogleMapsInterface {
+): RepositoryStateBase(scope = scope), GoogleMapsInterface {
     override fun placesAutoComplete(input: String, latitude: Double?, longitude: Double?) {
         coroutineScope.launch {
             sharedRepositories.googleMapsRepository.placesAutoComplete(
@@ -25,9 +25,10 @@ class SharedGoogleMapsInterface(
     ) {
         coroutineScope.launch {
             sharedRepositories.googleMapsRepository.autocompleteResultSelected(
-                location = location,
-                weatherRepository = sharedRepositories.weatherRepository
-            )
+                location = location
+            )?.let { (latitude, longitude) ->
+                sharedRepositories.weatherRepository.searchWeatherByLocation(latitude, longitude)
+            }
         }
     }
 

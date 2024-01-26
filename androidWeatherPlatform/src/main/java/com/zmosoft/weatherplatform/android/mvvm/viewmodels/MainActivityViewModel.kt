@@ -7,9 +7,9 @@ import com.google.android.gms.location.LocationServices
 import com.zmosoft.weatherplatform.android.di.AndroidModules
 import com.zmosoft.weatherplatform.data.SharedRepositories
 import com.zmosoft.weatherplatform.di.SharedModules
-import com.zmosoft.weatherplatform.interfaces.SharedGoogleMapsInterface
-import com.zmosoft.weatherplatform.interfaces.SharedWeatherInterface
-import com.zmosoft.weatherplatform.repositories.RepositoryInterfaceContainer
+import com.zmosoft.weatherplatform.interfaces.GoogleMapsRepositoryState
+import com.zmosoft.weatherplatform.interfaces.WeatherRepositoryState
+import com.zmosoft.weatherplatform.repositories.RepositoryStateContainer
 import org.kodein.di.*
 
 class MainActivityViewModel(
@@ -27,25 +27,25 @@ class MainActivityViewModel(
 
     val sharedRepositories: SharedRepositories by di.instance()
 
-    private val googleMapsInterface = SharedGoogleMapsInterface(
+    private val googleMapsState = GoogleMapsRepositoryState(
         scope = viewModelScope,
         sharedRepositories = sharedRepositories
     )
 
-    private val weatherInterface = SharedWeatherInterface(
+    private val weatherState = WeatherRepositoryState(
         scope = viewModelScope,
         sharedRepositories = sharedRepositories
     )
 
-    val interfaces = RepositoryInterfaceContainer(
-        googleMapsInterface = googleMapsInterface,
-        weatherInterface = weatherInterface
+    val interfaces = RepositoryStateContainer(
+        googleMapsState = googleMapsState,
+        weatherState = weatherState
     )
 
     fun updateLocation() {
         try {
             fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                weatherInterface.searchWeather(
+                weatherState.searchWeatherByLocation(
                     latitude = location.latitude,
                     longitude = location.longitude
                 )

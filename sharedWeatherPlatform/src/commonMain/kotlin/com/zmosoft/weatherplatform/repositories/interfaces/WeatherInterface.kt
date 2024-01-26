@@ -1,10 +1,12 @@
 package com.zmosoft.weatherplatform.repositories.interfaces
 
 interface WeatherInterface {
-    fun searchWeather(
-        query: String = "",
+    fun searchWeatherByName(
+        query: String = ""
+    )
+
+    fun searchWeatherByLocation(
         latitude: Double? = null,
         longitude: Double? = null
     )
-
 }

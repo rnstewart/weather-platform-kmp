@@ -5,14 +5,21 @@ import com.zmosoft.weatherplatform.repositories.interfaces.WeatherInterface
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-class SharedWeatherInterface(
+class WeatherRepositoryState(
     scope: CoroutineScope?,
     private val sharedRepositories: SharedRepositories
-): SharedInterfaceBase(scope = scope), WeatherInterface {
-    override fun searchWeather(query: String, latitude: Double?, longitude: Double?) {
+): RepositoryStateBase(scope = scope), WeatherInterface {
+    override fun searchWeatherByName(query: String) {
         coroutineScope.launch {
-            sharedRepositories.weatherRepository.searchWeather(
-                query = query,
+            sharedRepositories.weatherRepository.searchWeatherByName(
+                query = query
+            )
+        }
+    }
+
+    override fun searchWeatherByLocation(latitude: Double?, longitude: Double?) {
+        coroutineScope.launch {
+            sharedRepositories.weatherRepository.searchWeatherByLocation(
                 latitude = latitude,
                 longitude = longitude
             )
