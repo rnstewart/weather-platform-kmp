@@ -10,10 +10,10 @@ import Foundation
 import SwiftUI
 import sharedWeatherPlatform
 
-class ObservableGoogleMapsInterface: ObservableObject, GoogleMapsInterface {
+class ObservableGoogleMapsState: ObservableObject, GoogleMapsInterface {
     private let repositories: Repositories = Repositories()
     
-    private let sharedGoogleMapsInterface: SharedGoogleMapsInterface
+    private let googleMapsState: GoogleMapsRepositoryState
     
     @Published
     private(set) var data: GoogleMapsData
@@ -22,7 +22,7 @@ class ObservableGoogleMapsInterface: ObservableObject, GoogleMapsInterface {
         let sharedRepositories: SharedRepositories = repositories.sharedRepositories
         let repo = sharedRepositories.googleMapsRepository
         self.data = repo.data.value
-        self.sharedGoogleMapsInterface = SharedGoogleMapsInterface(
+        self.googleMapsState = GoogleMapsRepositoryState(
             scope: nil,
             sharedRepositories: sharedRepositories
         )
@@ -39,14 +39,14 @@ class ObservableGoogleMapsInterface: ObservableObject, GoogleMapsInterface {
     }
     
     func autocompleteResultSelected(location: AutocompletePlacesData.Prediction) {
-        sharedGoogleMapsInterface.autocompleteResultSelected(location: location)
+        googleMapsState.autocompleteResultSelected(location: location)
     }
     
     func placeDetails(placeId: String, fields: String?) {
-        sharedGoogleMapsInterface.placeDetails(placeId: placeId, fields: fields)
+        googleMapsState.placeDetails(placeId: placeId, fields: fields)
     }
     
     func placesAutoComplete(input: String, latitude: KotlinDouble?, longitude: KotlinDouble?) {
-        sharedGoogleMapsInterface.placesAutoComplete(input: input, latitude: latitude, longitude: longitude)
+        googleMapsState.placesAutoComplete(input: input, latitude: latitude, longitude: longitude)
     }
 }

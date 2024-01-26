@@ -11,8 +11,8 @@
 		058557D9273AAEEB004C7B11 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */; };
 		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
 		7555FF83242A565900829871 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF82242A565900829871 /* ContentView.swift */; };
-		8651DBE12B5C664700842944 /* ObservableGoogleMapsInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8651DBE02B5C664700842944 /* ObservableGoogleMapsInterface.swift */; };
-		8651DBE32B5C6C6000842944 /* ObservableWeatherInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8651DBE22B5C6C6000842944 /* ObservableWeatherInterface.swift */; };
+		8651DBE12B5C664700842944 /* ObservableGoogleMapsState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8651DBE02B5C664700842944 /* ObservableGoogleMapsState.swift */; };
+		8651DBE32B5C6C6000842944 /* ObservableWeatherState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8651DBE22B5C6C6000842944 /* ObservableWeatherState.swift */; };
 		8651DBE62B5C7E8C00842944 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8651DBE52B5C7E8C00842944 /* LocationManager.swift */; };
 		8651DBE92B5C7F3300842944 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 8651DBE82B5C7F3300842944 /* Kingfisher */; };
 		8651DBEB2B5C802600842944 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8651DBEA2B5C802600842944 /* Localizable.strings */; };
@@ -40,8 +40,8 @@
 		7555FF7B242A565900829871 /* iosWeatherPlatform.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iosWeatherPlatform.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF82242A565900829871 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		7555FF8C242A565B00829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8651DBE02B5C664700842944 /* ObservableGoogleMapsInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableGoogleMapsInterface.swift; sourceTree = "<group>"; };
-		8651DBE22B5C6C6000842944 /* ObservableWeatherInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableWeatherInterface.swift; sourceTree = "<group>"; };
+		8651DBE02B5C664700842944 /* ObservableGoogleMapsState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableGoogleMapsState.swift; sourceTree = "<group>"; };
+		8651DBE22B5C6C6000842944 /* ObservableWeatherState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableWeatherState.swift; sourceTree = "<group>"; };
 		8651DBE52B5C7E8C00842944 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		8651DBEA2B5C802600842944 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		8651DBEC2B5C804500842944 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -119,8 +119,8 @@
 		8651DBDF2B5C663000842944 /* Interfaces */ = {
 			isa = PBXGroup;
 			children = (
-				8651DBE02B5C664700842944 /* ObservableGoogleMapsInterface.swift */,
-				8651DBE22B5C6C6000842944 /* ObservableWeatherInterface.swift */,
+				8651DBE02B5C664700842944 /* ObservableGoogleMapsState.swift */,
+				8651DBE22B5C6C6000842944 /* ObservableWeatherState.swift */,
 			);
 			path = Interfaces;
 			sourceTree = "<group>";
@@ -238,8 +238,8 @@
 				8651DBED2B5C804500842944 /* Extensions.swift in Sources */,
 				7555FF83242A565900829871 /* ContentView.swift in Sources */,
 				8651DBE62B5C7E8C00842944 /* LocationManager.swift in Sources */,
-				8651DBE32B5C6C6000842944 /* ObservableWeatherInterface.swift in Sources */,
-				8651DBE12B5C664700842944 /* ObservableGoogleMapsInterface.swift in Sources */,
+				8651DBE32B5C6C6000842944 /* ObservableWeatherState.swift in Sources */,
+				8651DBE12B5C664700842944 /* ObservableGoogleMapsState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

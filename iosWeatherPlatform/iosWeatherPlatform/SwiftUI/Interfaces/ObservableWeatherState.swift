@@ -10,24 +10,24 @@ import Foundation
 import SwiftUI
 import sharedWeatherPlatform
 
-class ObservableWeatherInterface: ObservableObject, WeatherInterface {
+class ObservableWeatherState: ObservableObject, WeatherInterface {
     private let repositories: Repositories = Repositories()
     
-    private let sharedWeatherInterface: SharedWeatherInterface
+    private let weatherState: WeatherRepositoryState
     
     @Published
     private(set) var data: WeatherData
-
+    
     init() {
         let sharedRepositories: SharedRepositories = repositories.sharedRepositories
         let repo = sharedRepositories.weatherRepository
         self.data = repo.data.value
-        self.sharedWeatherInterface = SharedWeatherInterface(
+        self.weatherState = WeatherRepositoryState(
             scope: nil,
             sharedRepositories: sharedRepositories
         )
     }
-
+    
     func setup() {
         Task.detached {
             for await dataFlow in self.repositories.sharedRepositories.weatherRepository.data {
@@ -37,8 +37,12 @@ class ObservableWeatherInterface: ObservableObject, WeatherInterface {
             }
         }
     }
-
-    func searchWeather(query: String, latitude: KotlinDouble?, longitude: KotlinDouble?) {
-        sharedWeatherInterface.searchWeather(query: query, latitude: latitude, longitude: longitude)
+    
+    func searchWeatherByName(query: String) {
+        weatherState.searchWeatherByName(query: query)
+    }
+    
+    func searchWeatherByLocation(latitude: KotlinDouble?, longitude: KotlinDouble?) {
+        weatherState.searchWeatherByLocation(latitude: latitude, longitude: longitude)
     }
 }

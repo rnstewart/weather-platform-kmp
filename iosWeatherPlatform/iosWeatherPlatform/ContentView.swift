@@ -3,15 +3,15 @@ import sharedWeatherPlatform
 import Kingfisher
 
 struct ContentView: View {
-    @StateObject var googleMapsInterface: ObservableGoogleMapsInterface = ObservableGoogleMapsInterface()
-    @StateObject var weatherInterface: ObservableWeatherInterface = ObservableWeatherInterface()
+    @StateObject var googleMapsState: ObservableGoogleMapsState = ObservableGoogleMapsState()
+    @StateObject var weatherState: ObservableWeatherState = ObservableWeatherState()
     @StateObject var locationManager = LocationManager()
     @State var searchQuery: String = ""
     
     var body: some View {
-        let weatherData = weatherInterface.data
-        let googleMapsData = googleMapsInterface.data
-        let isLoading: Bool = googleMapsInterface.data.loading || weatherInterface.data.loading
+        let weatherData = weatherState.data
+        let googleMapsData = googleMapsState.data
+        let isLoading: Bool = googleMapsState.data.loading || weatherState.data.loading
         
         VStack {
             HStack {
@@ -29,13 +29,13 @@ struct ContentView: View {
                     Image(systemName: "list.bullet")
                         .padding(6)
                         .onTapGesture {
-                            googleMapsInterface.placesAutoComplete(input: searchQuery, latitude: nil, longitude: nil)
+                            googleMapsState.placesAutoComplete(input: searchQuery, latitude: nil, longitude: nil)
                         }
                     
                     Image(systemName: "magnifyingglass")
                         .padding(6)
                         .onTapGesture {
-                            weatherInterface.searchWeather(query: searchQuery, latitude: nil, longitude: nil)
+                            weatherState.searchWeatherByName(query: searchQuery)
                         }
                 } else {
                     Image(systemName: "location")
@@ -56,7 +56,7 @@ struct ContentView: View {
                             
                             Spacer()
                         }.padding(8).onTapGesture {
-                            googleMapsInterface.autocompleteResultSelected(location: prediction)
+                            googleMapsState.autocompleteResultSelected(location: prediction)
                         }
                     }
                 }
@@ -121,12 +121,11 @@ struct ContentView: View {
             }
             Spacer()
         }.padding(8).onAppear {
-            googleMapsInterface.setup()
-            weatherInterface.setup()
+            googleMapsState.setup()
+            weatherState.setup()
             locationManager.setLocationCallback { location in
                 if let location = location {
-                    weatherInterface.searchWeather(
-                        query: "",
+                    weatherState.searchWeatherByLocation(
                         latitude: KotlinDouble(value: location.coordinate.latitude),
                         longitude: KotlinDouble(value: location.coordinate.longitude)
                     )
