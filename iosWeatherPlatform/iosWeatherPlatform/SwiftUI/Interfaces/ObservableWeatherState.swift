@@ -21,6 +21,9 @@ class ObservableWeatherState: ObservableObject, WeatherInterface {
     @Published
     private(set) var loading: Bool
     
+    @Published
+    private(set) var error: String = ""
+    
     init() {
         let sharedRepositories: SharedRepositories = repositories.sharedRepositories
         let repo = sharedRepositories.weatherRepository
@@ -37,6 +40,14 @@ class ObservableWeatherState: ObservableObject, WeatherInterface {
             for await dataFlow in self.repositories.sharedRepositories.weatherRepository.data {
                 DispatchQueue.main.async {
                     self.data = dataFlow
+                }
+            }
+        }
+
+        Task.detached {
+            for await errorFlow in self.repositories.sharedRepositories.weatherRepository.error {
+                DispatchQueue.main.async {
+                    self.error = errorFlow
                 }
             }
         }

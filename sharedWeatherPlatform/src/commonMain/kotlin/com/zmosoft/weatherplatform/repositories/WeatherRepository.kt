@@ -21,7 +21,7 @@ class WeatherRepository: RepositoryBase() {
                     data = response.data
                 )
             )
-            error.emit(response.error?.error)
+            error.emit(response.error?.error ?: "")
         }
     }
 
@@ -40,7 +40,7 @@ class WeatherRepository: RepositoryBase() {
                     data = response.data
                 )
             )
-            error.emit(response.error?.error)
+            error.emit(response.error?.error ?: "")
         }
     }
 }

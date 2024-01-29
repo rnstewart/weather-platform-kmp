@@ -12,6 +12,8 @@ struct ContentView: View {
         let weatherData = weatherState.data
         let googleMapsData = googleMapsState.data
         let isLoading: Bool = googleMapsState.loading || weatherState.loading
+        let googleMapsError: String = googleMapsState.error
+        let weatherError: String = weatherState.error
         
         VStack {
             HStack {
@@ -122,6 +124,14 @@ struct ContentView: View {
                         Spacer()
                     }.padding(.vertical, 16)
                 }
+                
+                if (!googleMapsError.isEmpty) {
+                    ErrorMessage(error: googleMapsError)
+                }
+                
+                if (!weatherError.isEmpty) {
+                    ErrorMessage(error: weatherError)
+                }
             }
             Spacer()
         }.padding(8).onAppear {
@@ -135,6 +145,25 @@ struct ContentView: View {
                     )
                 }
             }
+        }
+    }
+}
+
+struct ErrorMessage: View {
+    let error: String
+    
+    var body: some View {
+        HStack {
+            Spacer()
+
+            Image(systemName: "exclamationmark.triangle.fill")
+            
+            Text(error)
+                .font(.system(size: 20))
+                .fontWeight(.semibold)
+                .padding(.leading, 6)
+            
+            Spacer()
         }
     }
 }

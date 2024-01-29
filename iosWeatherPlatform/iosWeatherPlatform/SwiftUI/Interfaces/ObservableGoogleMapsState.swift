@@ -21,6 +21,9 @@ class ObservableGoogleMapsState: ObservableObject, GoogleMapsInterface {
     @Published
     private(set) var loading: Bool
     
+    @Published
+    private(set) var error: String = ""
+    
     init() {
         let sharedRepositories: SharedRepositories = repositories.sharedRepositories
         let repo = sharedRepositories.googleMapsRepository
@@ -37,6 +40,14 @@ class ObservableGoogleMapsState: ObservableObject, GoogleMapsInterface {
             for await dataFlow in self.repositories.sharedRepositories.googleMapsRepository.data {
                 DispatchQueue.main.async {
                     self.data = dataFlow
+                }
+            }
+        }
+
+        Task.detached {
+            for await errorFlow in self.repositories.sharedRepositories.googleMapsRepository.error {
+                DispatchQueue.main.async {
+                    self.error = errorFlow
                 }
             }
         }
