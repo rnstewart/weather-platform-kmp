@@ -13,7 +13,8 @@ import com.zmosoft.weatherplatform.repositories.RepositoryStateContainer
 import org.kodein.di.*
 
 class MainActivityViewModel(
-    activity: Activity
+    activity: Activity,
+    val sharedRepositories: SharedRepositories = SharedRepositories()
 ): ViewModel(), DIAware {
     override val di by DI.lazy {
         importAll(
@@ -24,8 +25,6 @@ class MainActivityViewModel(
     }
 
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
-
-    val sharedRepositories: SharedRepositories by di.instance()
 
     val googleMapsState = GoogleMapsRepositoryState(
         scope = viewModelScope,
