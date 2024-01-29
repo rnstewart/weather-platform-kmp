@@ -7,8 +7,8 @@ import com.google.android.gms.location.LocationServices
 import com.zmosoft.weatherplatform.android.di.AndroidModules
 import com.zmosoft.weatherplatform.data.SharedRepositories
 import com.zmosoft.weatherplatform.di.SharedModules
-import com.zmosoft.weatherplatform.interfaces.GoogleMapsRepositoryState
-import com.zmosoft.weatherplatform.interfaces.WeatherRepositoryState
+import com.zmosoft.weatherplatform.state.GoogleMapsRepositoryState
+import com.zmosoft.weatherplatform.state.WeatherRepositoryState
 import com.zmosoft.weatherplatform.repositories.RepositoryStateContainer
 import org.kodein.di.*
 

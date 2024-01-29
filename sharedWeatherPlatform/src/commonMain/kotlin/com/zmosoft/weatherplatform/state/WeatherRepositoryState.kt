@@ -1,4 +1,4 @@
-package com.zmosoft.weatherplatform.interfaces
+package com.zmosoft.weatherplatform.state
 
 import com.zmosoft.weatherplatform.data.SharedRepositories
 import com.zmosoft.weatherplatform.repositories.interfaces.WeatherInterface

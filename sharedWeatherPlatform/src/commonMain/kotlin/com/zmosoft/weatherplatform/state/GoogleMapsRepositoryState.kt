@@ -1,4 +1,4 @@
-package com.zmosoft.weatherplatform.interfaces
+package com.zmosoft.weatherplatform.state
 
 import com.zmosoft.weatherplatform.api.models.response.geo.AutocompletePlacesData
 import com.zmosoft.weatherplatform.data.SharedRepositories

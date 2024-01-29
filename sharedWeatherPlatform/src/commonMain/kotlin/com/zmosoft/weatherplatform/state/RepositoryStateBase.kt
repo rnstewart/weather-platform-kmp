@@ -1,4 +1,4 @@
-package com.zmosoft.weatherplatform.interfaces
+package com.zmosoft.weatherplatform.state
 
 import com.zmosoft.weatherplatform.utils.BackgroundDispatcher
 import kotlinx.coroutines.*

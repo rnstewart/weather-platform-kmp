@@ -1,8 +1,7 @@
 package com.zmosoft.weatherplatform.repositories
 
-import com.zmosoft.weatherplatform.api.APIResponse
-import com.zmosoft.weatherplatform.interfaces.GoogleMapsRepositoryState
-import com.zmosoft.weatherplatform.interfaces.WeatherRepositoryState
+import com.zmosoft.weatherplatform.state.GoogleMapsRepositoryState
+import com.zmosoft.weatherplatform.state.WeatherRepositoryState
 import com.zmosoft.weatherplatform.repositories.data.GoogleMapsData
 import com.zmosoft.weatherplatform.repositories.data.WeatherData
 
