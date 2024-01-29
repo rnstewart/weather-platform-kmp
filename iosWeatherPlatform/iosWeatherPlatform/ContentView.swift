@@ -22,32 +22,36 @@ struct ContentView: View {
                     .padding(.top, 16)
                     .textFieldStyle(.roundedBorder)
                 
-                if (isLoading) {
-                    ProgressView()
-                        .padding(6)
-                } else if (!searchQuery.isEmpty) {
+                if (!searchQuery.isEmpty) {
                     Image(systemName: "list.bullet")
                         .padding(6)
                         .onTapGesture {
                             googleMapsState.placesAutoComplete(input: searchQuery, latitude: nil, longitude: nil)
-                        }
+                            searchQuery = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
+                        }.disabled(isLoading)
                     
                     Image(systemName: "magnifyingglass")
                         .padding(6)
                         .onTapGesture {
                             weatherState.searchWeatherByName(query: searchQuery)
-                        }
+                            searchQuery = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
+                        }.disabled(isLoading)
                 } else {
                     Image(systemName: "location")
                         .padding(6)
                         .onTapGesture {
                             locationManager.updateLocation()
-                        }
+                            searchQuery = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
+                        }.disabled(isLoading)
                 }
             }
             
             let autocompletePredictions = googleMapsData.autocompletePredictions
-            if !autocompletePredictions.isEmpty {
+            
+            if (isLoading) {
+                ProgressView()
+                    .padding(6)
+            } else if !autocompletePredictions.isEmpty {
                 List {
                     ForEach(autocompletePredictions, id: \.self) { prediction in
                         HStack {

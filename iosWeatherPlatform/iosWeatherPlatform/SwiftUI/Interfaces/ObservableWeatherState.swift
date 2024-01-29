@@ -39,6 +39,9 @@ class ObservableWeatherState: ObservableObject, WeatherInterface {
                     self.data = dataFlow
                 }
             }
+        }
+
+        Task.detached {
             for await loading in self.weatherState.loading {
                 DispatchQueue.main.async {
                     self.loading = loading.boolValue

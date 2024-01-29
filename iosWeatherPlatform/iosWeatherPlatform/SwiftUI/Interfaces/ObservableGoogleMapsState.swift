@@ -39,6 +39,9 @@ class ObservableGoogleMapsState: ObservableObject, GoogleMapsInterface {
                     self.data = dataFlow
                 }
             }
+        }
+
+        Task.detached {
             for await loading in self.googleMapsState.loading {
                 DispatchQueue.main.async {
                     self.loading = loading.boolValue
