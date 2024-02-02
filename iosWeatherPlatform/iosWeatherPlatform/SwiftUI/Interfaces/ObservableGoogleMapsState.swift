@@ -45,7 +45,7 @@ class ObservableGoogleMapsState: ObservableObject, GoogleMapsInterface {
         }
 
         Task.detached {
-            for await errorFlow in self.repositories.sharedRepositories.googleMapsRepository.error {
+            for await errorFlow in self.repositories.sharedRepositories.googleMapsRepository.errorVal {
                 DispatchQueue.main.async {
                     self.error = errorFlow
                 }

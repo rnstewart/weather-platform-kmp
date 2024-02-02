@@ -45,7 +45,7 @@ class ObservableWeatherState: ObservableObject, WeatherInterface {
         }
 
         Task.detached {
-            for await errorFlow in self.repositories.sharedRepositories.weatherRepository.error {
+            for await errorFlow in self.repositories.sharedRepositories.weatherRepository.errorVal {
                 DispatchQueue.main.async {
                     self.error = errorFlow
                 }
