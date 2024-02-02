@@ -240,7 +240,7 @@ fun WeatherSearchScreen(
             }
         }
 
-        error?.let {
+        if (error?.isNotEmpty() == true) {
             Card {
                 Row(
                     modifier = Modifier.padding(16.dp),

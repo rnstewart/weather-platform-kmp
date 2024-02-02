@@ -11,22 +11,22 @@ class WeatherRepositoryState(
 ): RepositoryStateBase(scope = scope), WeatherInterface {
     override fun searchWeatherByName(query: String) {
         coroutineScope.launch {
-            loading.emit(true)
+            isLoading(true)
             sharedRepositories.weatherRepository.searchWeatherByName(
                 query = query
             )
-            loading.emit(false)
+            isLoading(false)
         }
     }
 
     override fun searchWeatherByLocation(latitude: Double?, longitude: Double?) {
         coroutineScope.launch {
-            loading.emit(true)
+            isLoading(true)
             sharedRepositories.weatherRepository.searchWeatherByLocation(
                 latitude = latitude,
                 longitude = longitude
             )
-            loading.emit(false)
+            isLoading(false)
         }
     }
 }

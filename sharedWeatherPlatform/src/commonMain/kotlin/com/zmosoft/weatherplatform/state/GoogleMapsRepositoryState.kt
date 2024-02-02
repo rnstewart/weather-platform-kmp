@@ -12,13 +12,13 @@ class GoogleMapsRepositoryState(
 ): RepositoryStateBase(scope = scope), GoogleMapsInterface {
     override fun placesAutoComplete(input: String, latitude: Double?, longitude: Double?) {
         coroutineScope.launch {
-            loading.emit(true)
+            isLoading(true)
             sharedRepositories.googleMapsRepository.placesAutoComplete(
                 input = input,
                 latitude = latitude,
                 longitude = longitude
             )
-            loading.emit(false)
+            isLoading(false)
         }
     }
 
@@ -26,26 +26,26 @@ class GoogleMapsRepositoryState(
         location: AutocompletePlacesData.Prediction
     ) {
         coroutineScope.launch {
-            loading.emit(true)
+            isLoading(true)
             sharedRepositories.googleMapsRepository.autocompleteResultSelected(
                 location = location
             )?.let { (latitude, longitude) ->
                 sharedRepositories.weatherRepository.searchWeatherByLocation(latitude, longitude)
-                loading.emit(false)
+                isLoading(false)
             } ?: run {
-                loading.emit(false)
+                isLoading(false)
             }
         }
     }
 
     override fun placeDetails(placeId: String, fields: String?) {
         coroutineScope.launch {
-            loading.emit(true)
+            isLoading(true)
             sharedRepositories.googleMapsRepository.placeDetails(
                 placeId = placeId,
                 fields = fields
             )
-            loading.emit(false)
+            isLoading(false)
         }
     }
 }
