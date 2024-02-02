@@ -4,13 +4,15 @@ import com.zmosoft.weatherplatform.api.models.response.geo.AutocompletePlacesDat
 import com.zmosoft.weatherplatform.repositories.data.GoogleMapsData
 import com.zmosoft.weatherplatform.utils.BackgroundDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.withContext
 
 class GoogleMapsRepository: RepositoryBase() {
-    val data = MutableStateFlow(GoogleMapsData())
+    private val _data = MutableStateFlow(GoogleMapsData())
+    val data: StateFlow<GoogleMapsData> = _data
 
     suspend fun clear() {
-        data.emit(GoogleMapsData())
+        _data.emit(GoogleMapsData())
     }
 
     suspend fun placesAutoComplete(
@@ -25,8 +27,8 @@ class GoogleMapsRepository: RepositoryBase() {
                 longitude = longitude
             )
 
-            data.emit(
-                data.value.copy(
+            _data.emit(
+                _data.value.copy(
                     autocompletePredictions = response.data?.predictions ?: listOf()
                 )
             )
@@ -45,8 +47,8 @@ class GoogleMapsRepository: RepositoryBase() {
                 val latitude = locationResult?.latitude
                 val longitude = locationResult?.longitude
                 if (latitude != null && longitude != null) {
-                    data.emit(
-                        data.value.copy(
+                    _data.emit(
+                        _data.value.copy(
                             autocompletePredictions = listOf(),
                             placeDetails = response.data.result
                         )
@@ -72,8 +74,8 @@ class GoogleMapsRepository: RepositoryBase() {
         withContext (BackgroundDispatcher) {
             val response = googleMapsService.placeDetails(placeId = placeId, fields = fields)
 
-            data.emit(
-                data.value.copy(
+            _data.emit(
+                _data.value.copy(
                     placeDetails = response.data?.result
                 )
             )
