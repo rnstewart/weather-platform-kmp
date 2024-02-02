@@ -54,8 +54,8 @@ class MainActivity : ComponentActivity(), DIAware {
                             weather = viewModel.weatherState.loading.collectAsState().value
                         ),
                         errorState = ErrorState(
-                            googleMaps = viewModel.sharedRepositories.googleMapsRepository.error.collectAsState().value,
-                            weather = viewModel.sharedRepositories.weatherRepository.error.collectAsState().value
+                            googleMaps = viewModel.sharedRepositories.googleMapsRepository.errorVal.collectAsState().value,
+                            weather = viewModel.sharedRepositories.weatherRepository.errorVal.collectAsState().value
                         ),
                         interfaces = viewModel.interfaces
                     )

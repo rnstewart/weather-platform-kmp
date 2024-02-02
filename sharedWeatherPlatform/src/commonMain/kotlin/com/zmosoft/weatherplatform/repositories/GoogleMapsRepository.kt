@@ -30,7 +30,7 @@ class GoogleMapsRepository: RepositoryBase() {
                     autocompletePredictions = response.data?.predictions ?: listOf()
                 )
             )
-            error.emit(response.error?.error ?: "")
+            setError(response.error?.error ?: "")
         }
     }
 
@@ -56,7 +56,7 @@ class GoogleMapsRepository: RepositoryBase() {
                         longitude
                     )
                 } else {
-                    error.emit(response.error?.error ?: "")
+                    setError(response.error?.error ?: "")
                     null
                 }
             } else {
@@ -77,7 +77,7 @@ class GoogleMapsRepository: RepositoryBase() {
                     placeDetails = response.data?.result
                 )
             )
-            error.emit(response.error?.error ?: "")
+            setError(response.error?.error ?: "")
         }
     }
 }
