@@ -32,9 +32,11 @@ class MainActivityViewModel(
     fun updateLocation() {
         try {
             fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                mainScreenState.searchWeatherByLocation(
-                    latitude = location.latitude,
-                    longitude = location.longitude
+                mainScreenState.process(
+                    MainScreenStateMachine.Intent.SearchWeatherByLocation(
+                        latitude = location.latitude,
+                        longitude = location.longitude
+                    )
                 )
             }
         } catch (e: SecurityException) {

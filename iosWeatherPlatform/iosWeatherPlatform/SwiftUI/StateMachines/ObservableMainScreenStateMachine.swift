@@ -10,7 +10,7 @@ import Foundation
 import SwiftUI
 import sharedWeatherPlatform
 
-class ObservableMainScreenStateMachine: ObservableObject, GoogleMapsInterface, WeatherInterface {
+class ObservableMainScreenStateMachine: ObservableObject {
     private let repositories: Repositories = Repositories()
 
     private let stateMachine: MainScreenStateMachine

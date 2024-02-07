@@ -3,8 +3,6 @@ package com.zmosoft.weatherplatform.state
 import com.zmosoft.weatherplatform.api.models.response.geo.AutocompletePlacesData
 import com.zmosoft.weatherplatform.api.models.response.weather.WeatherDataResponse
 import com.zmosoft.weatherplatform.data.SharedRepositories
-import com.zmosoft.weatherplatform.repositories.interfaces.GoogleMapsInterface
-import com.zmosoft.weatherplatform.repositories.interfaces.WeatherInterface
 import com.zmosoft.weatherplatform.utils.BackgroundDispatcher
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 class MainScreenStateMachine(
     scope: CoroutineScope?,
     private val sharedRepositories: SharedRepositories
-): GoogleMapsInterface, WeatherInterface {
+) {
     private val coroutineScope = scope ?: CoroutineScope(BackgroundDispatcher + Job())
 
     private val _state: MutableStateFlow<State> = MutableStateFlow(State.Empty)
@@ -70,7 +68,7 @@ class MainScreenStateMachine(
         }
     }
 
-    override fun onLocationSearch(input: String) {
+    private fun onLocationSearch(input: String) {
         coroutineScope.launch {
             _state.emit(State.Loading)
             val result = sharedRepositories.googleMapsRepository.searchLocation(
@@ -84,7 +82,7 @@ class MainScreenStateMachine(
         }
     }
 
-    override fun onLocationSelected(location: AutocompletePlacesData.Prediction) {
+    private fun onLocationSelected(location: AutocompletePlacesData.Prediction) {
         coroutineScope.launch {
             _state.emit(State.Loading)
             sharedRepositories.googleMapsRepository.autocompleteResultSelected(
@@ -106,7 +104,7 @@ class MainScreenStateMachine(
         }
     }
 
-    override fun searchWeatherByName(query: String) {
+    private fun searchWeatherByName(query: String) {
         coroutineScope.launch {
             _state.emit(State.Loading)
             val response = sharedRepositories.weatherRepository.searchWeatherByName(
@@ -120,7 +118,7 @@ class MainScreenStateMachine(
         }
     }
 
-    override fun searchWeatherByLocation(latitude: Double?, longitude: Double?) {
+    private fun searchWeatherByLocation(latitude: Double?, longitude: Double?) {
         coroutineScope.launch {
             _state.emit(State.Loading)
             val response = sharedRepositories.weatherRepository.searchWeatherByLocation(
