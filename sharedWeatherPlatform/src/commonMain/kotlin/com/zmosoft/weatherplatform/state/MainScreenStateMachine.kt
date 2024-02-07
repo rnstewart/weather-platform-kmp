@@ -14,7 +14,7 @@ class MainScreenStateMachine(
     scope: CoroutineScope?,
     private val sharedRepositories: SharedRepositories
 ): GoogleMapsInterface, WeatherInterface {
-    val coroutineScope = scope ?: CoroutineScope(BackgroundDispatcher + Job())
+    private val coroutineScope = scope ?: CoroutineScope(BackgroundDispatcher + Job())
 
     private val _state: MutableStateFlow<State> = MutableStateFlow(State.Empty)
     val state: StateFlow<State> = _state
