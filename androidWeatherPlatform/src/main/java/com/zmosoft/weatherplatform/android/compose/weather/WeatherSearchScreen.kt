@@ -25,8 +25,7 @@ import coil.compose.rememberImagePainter
 import com.zmosoft.weatherplatform.android.R
 import com.zmosoft.weatherplatform.android.compose.WeatherPlatformTheme
 import com.zmosoft.weatherplatform.android.utils.*
-import com.zmosoft.weatherplatform.repositories.*
-import com.zmosoft.weatherplatform.repositories.data.WeatherData
+import com.zmosoft.weatherplatform.state.MainScreenStateMachine
 import kotlinx.coroutines.launch
 
 @Composable
@@ -35,12 +34,11 @@ fun WeatherSearchScreen(
     onLocationClicked: suspend () -> Unit
 ) {
     val content = LocalRepositoryContent.current
-    val interfaces = content.interfaces
-    val data = content.data
-    val weatherData = data.weatherData.data
-    val autocompleteResults = data.googleMapsData.autocompletePredictions
-    val loading = (content.loadingState.googleMaps || content.loadingState.weather)
-    val error = (content.errorState.googleMaps ?: content.errorState.weather)
+    val state = content.mainScreenState
+    val weatherData = (state as? MainScreenStateMachine.State.WeatherLoaded)?.data
+    val autocompleteResults = (state as? MainScreenStateMachine.State.AutocompleteLoaded)?.places ?: listOf()
+    val loading = (state is MainScreenStateMachine.State.Loading)
+    val error = (state as? MainScreenStateMachine.State.Error)?.error ?: ""
     val focusManager = LocalFocusManager.current
 
     val coroutineScope = rememberCoroutineScope()
@@ -85,7 +83,9 @@ fun WeatherSearchScreen(
                 IconButton(
                     onClick = {
                         focusManager.clearFocus()
-                        interfaces?.googleMapsState?.placesAutoComplete(searchQuery)
+                        content.processIntent(
+                            MainScreenStateMachine.Intent.SearchLocation(searchQuery)
+                        )
                     },
                     enabled = !loading
                 ) {
@@ -99,7 +99,9 @@ fun WeatherSearchScreen(
                 IconButton(
                     onClick = {
                         focusManager.clearFocus()
-                        interfaces?.weatherState?.searchWeatherByName(query = searchQuery)
+                        content.processIntent(
+                            MainScreenStateMachine.Intent.SearchWeatherByName(searchQuery)
+                        )
                     },
                     enabled = !loading
                 ) {
@@ -146,8 +148,8 @@ fun WeatherSearchScreen(
                             Row(
                                 modifier = Modifier
                                     .clickable {
-                                        interfaces?.googleMapsState?.autocompleteResultSelected(
-                                            prediction
+                                        content.processIntent(
+                                            MainScreenStateMachine.Intent.SelectLocation(prediction)
                                         )
                                     }
                                     .padding(8.dp)
@@ -240,7 +242,7 @@ fun WeatherSearchScreen(
             }
         }
 
-        if (error?.isNotEmpty() == true) {
+        if (error.isNotEmpty()) {
             Card {
                 Row(
                     modifier = Modifier.padding(16.dp),
@@ -270,16 +272,8 @@ fun WeatherSearchScreen(
 fun PreviewWeatherSearchScreen() {
     CompositionLocalProvider(
         LocalRepositoryContent provides RepositoryContent(
-            data = RepositoryDataContainer(
-                weatherData = WeatherData(
-                    data = ComposeTestData.weatherData
-                )
-            ),
-            loadingState = LoadingState(
-                weather = false
-            ),
-            errorState = ErrorState(
-                weather = "Not Found"
+            mainScreenState = MainScreenStateMachine.State.WeatherLoaded(
+                data = ComposeTestData.weatherData
             )
         )
     ) {

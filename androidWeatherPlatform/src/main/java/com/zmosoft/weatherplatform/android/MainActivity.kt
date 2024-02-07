@@ -11,7 +11,6 @@ import com.zmosoft.weatherplatform.android.di.AndroidModules
 import com.zmosoft.weatherplatform.android.mvvm.viewmodels.MainActivityViewModel
 import com.zmosoft.weatherplatform.android.utils.*
 import com.zmosoft.weatherplatform.di.SharedModules
-import com.zmosoft.weatherplatform.repositories.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.kodein.di.*
@@ -45,19 +44,10 @@ class MainActivity : ComponentActivity(), DIAware {
             WeatherPlatformTheme {
                 CompositionLocalProvider(
                     LocalRepositoryContent provides RepositoryContent(
-                        data = RepositoryDataContainer(
-                            googleMapsData = viewModel.sharedRepositories.googleMapsRepository.data.collectAsState().value,
-                            weatherData = viewModel.sharedRepositories.weatherRepository.data.collectAsState().value
-                        ),
-                        loadingState = LoadingState(
-                            googleMaps = viewModel.googleMapsState.loading.collectAsState().value,
-                            weather = viewModel.weatherState.loading.collectAsState().value
-                        ),
-                        errorState = ErrorState(
-                            googleMaps = viewModel.sharedRepositories.googleMapsRepository.errorVal.collectAsState().value,
-                            weather = viewModel.sharedRepositories.weatherRepository.errorVal.collectAsState().value
-                        ),
-                        interfaces = viewModel.interfaces
+                        mainScreenState = viewModel.mainScreenState.state.collectAsState().value,
+                        processIntent = { intent ->
+                            viewModel.mainScreenState.process(intent)
+                        }
                     )
                 ) {
                     MainScreen(

@@ -9,8 +9,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.zmosoft.weatherplatform.android.compose.WeatherPlatformTheme
 import com.zmosoft.weatherplatform.android.compose.weather.WeatherSearchScreen
 import com.zmosoft.weatherplatform.android.utils.*
-import com.zmosoft.weatherplatform.repositories.RepositoryDataContainer
-import com.zmosoft.weatherplatform.repositories.data.WeatherData
+import com.zmosoft.weatherplatform.state.MainScreenStateMachine
 
 @Composable
 fun MainScreen(
@@ -31,10 +30,8 @@ fun PreviewMainScreen() {
     WeatherPlatformTheme {
         CompositionLocalProvider(
             LocalRepositoryContent provides RepositoryContent(
-                data = RepositoryDataContainer(
-                    weatherData = WeatherData(
-                        data = ComposeTestData.weatherData
-                    )
+                mainScreenState = MainScreenStateMachine.State.WeatherLoaded(
+                    data = ComposeTestData.weatherData
                 )
             )
         ) {

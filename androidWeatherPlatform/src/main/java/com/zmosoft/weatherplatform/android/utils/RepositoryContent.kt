@@ -2,12 +2,11 @@ package com.zmosoft.weatherplatform.android.utils
 
 import androidx.compose.runtime.compositionLocalOf
 import com.zmosoft.weatherplatform.repositories.*
+import com.zmosoft.weatherplatform.state.*
 
 data class RepositoryContent(
-    val data: RepositoryDataContainer = RepositoryDataContainer(),
-    val loadingState: LoadingState = LoadingState(),
-    val errorState: ErrorState = ErrorState(),
-    val interfaces: RepositoryStateContainer? = null
+    val mainScreenState: MainScreenStateMachine.State = MainScreenStateMachine.State.Empty,
+    val processIntent: (MainScreenStateMachine.Intent) -> Unit = {}
 )
 
 data class MainScreenNavInterface(

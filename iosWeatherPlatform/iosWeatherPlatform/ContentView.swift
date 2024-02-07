@@ -3,17 +3,15 @@ import sharedWeatherPlatform
 import Kingfisher
 
 struct ContentView: View {
-    @StateObject var googleMapsState: ObservableGoogleMapsState = ObservableGoogleMapsState()
-    @StateObject var weatherState: ObservableWeatherState = ObservableWeatherState()
+    @StateObject var mainScreenState: ObservableMainScreenStateMachine = ObservableMainScreenStateMachine()
     @StateObject var locationManager = LocationManager()
     @State var searchQuery: String = ""
     
     var body: some View {
-        let weatherData = weatherState.data
-        let googleMapsData = googleMapsState.data
-        let isLoading: Bool = googleMapsState.loading || weatherState.loading
-        let googleMapsError: String = googleMapsState.error
-        let weatherError: String = weatherState.error
+        let weatherData = (mainScreenState.state as? MainScreenStateMachineStateWeatherLoaded)?.data
+        let autocompletePredictions = (mainScreenState.state as? MainScreenStateMachineStateAutocompleteLoaded)?.places ?? []
+        let isLoading = (mainScreenState.state is MainScreenStateMachineStateLoading)
+        let error = (mainScreenState.state as? MainScreenStateMachineStateError)?.error ?? ""
         
         VStack {
             HStack {
@@ -28,14 +26,14 @@ struct ContentView: View {
                     Image(systemName: "list.bullet")
                         .padding(6)
                         .onTapGesture {
-                            googleMapsState.placesAutoComplete(input: searchQuery, latitude: nil, longitude: nil)
+                            mainScreenState.onLocationSearch(input: searchQuery)
                             searchQuery = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
                         }.disabled(isLoading)
                     
                     Image(systemName: "magnifyingglass")
                         .padding(6)
                         .onTapGesture {
-                            weatherState.searchWeatherByName(query: searchQuery)
+                            mainScreenState.searchWeatherByName(query: searchQuery)
                             searchQuery = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
                         }.disabled(isLoading)
                 } else {
@@ -47,8 +45,6 @@ struct ContentView: View {
                         }.disabled(isLoading)
                 }
             }
-            
-            let autocompletePredictions = googleMapsData.autocompletePredictions
             
             if (isLoading) {
                 ProgressView()
@@ -62,11 +58,11 @@ struct ContentView: View {
                             
                             Spacer()
                         }.padding(8).onTapGesture {
-                            googleMapsState.autocompleteResultSelected(location: prediction)
+                            mainScreenState.onLocationSelected(location: prediction)
                         }
                     }
                 }
-            } else if let data = weatherData.data {
+            } else if let data = weatherData {
                 HStack {
                     Spacer()
                     Text(data.name ?? "")
@@ -125,21 +121,16 @@ struct ContentView: View {
                     }.padding(.vertical, 16)
                 }
                 
-                if (!googleMapsError.isEmpty) {
-                    ErrorMessage(error: googleMapsError)
-                }
-                
-                if (!weatherError.isEmpty) {
-                    ErrorMessage(error: weatherError)
+                if (!error.isEmpty) {
+                    ErrorMessage(error: error)
                 }
             }
             Spacer()
         }.padding(8).onAppear {
-            googleMapsState.setup()
-            weatherState.setup()
+            mainScreenState.setup()
             locationManager.setLocationCallback { location in
                 if let location = location {
-                    weatherState.searchWeatherByLocation(
+                    mainScreenState.searchWeatherByLocation(
                         latitude: KotlinDouble(value: location.coordinate.latitude),
                         longitude: KotlinDouble(value: location.coordinate.longitude)
                     )
