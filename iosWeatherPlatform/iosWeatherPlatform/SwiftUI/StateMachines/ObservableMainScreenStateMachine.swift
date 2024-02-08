@@ -16,7 +16,7 @@ class ObservableMainScreenStateMachine: ObservableObject {
     private let stateMachine: MainScreenStateMachine
     
     @Published
-    private(set) var state: MainScreenStateMachineState
+    private(set) var state: MainScreenState
     
     init() {
         let sharedRepositories: SharedRepositories = repositories.sharedRepositories
@@ -39,25 +39,25 @@ class ObservableMainScreenStateMachine: ObservableObject {
     
     func onLocationSearch(input: String) {
         stateMachine.process(
-            intent: MainScreenStateMachineIntentSearchLocation(query: input)
+            intent: MainScreenIntentSearchLocation(query: input)
         )
     }
     
     func onLocationSelected(location: AutocompletePlacesData.Prediction) {
         stateMachine.process(
-            intent: MainScreenStateMachineIntentSelectLocation(location: location)
+            intent: MainScreenIntentSelectLocation(location: location)
         )
     }
     
     func searchWeatherByLocation(latitude: KotlinDouble?, longitude: KotlinDouble?) {
         stateMachine.process(
-            intent: MainScreenStateMachineIntentSearchWeatherByLocation(latitude: latitude, longitude: longitude)
+            intent: MainScreenIntentSearchWeatherByLocation(latitude: latitude, longitude: longitude)
         )
     }
     
     func searchWeatherByName(query: String) {
         stateMachine.process(
-            intent: MainScreenStateMachineIntentSearchWeatherByName(query: query)
+            intent: MainScreenIntentSearchWeatherByName(query: query)
         )
     }
 }

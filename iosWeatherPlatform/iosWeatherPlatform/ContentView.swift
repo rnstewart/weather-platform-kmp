@@ -8,10 +8,10 @@ struct ContentView: View {
     @State var searchQuery: String = ""
     
     var body: some View {
-        let weatherData = (mainScreenState.state as? MainScreenStateMachineStateWeatherLoaded)?.data
-        let autocompletePredictions = (mainScreenState.state as? MainScreenStateMachineStateAutocompleteLoaded)?.places ?? []
-        let isLoading = (mainScreenState.state is MainScreenStateMachineStateLoading)
-        let error = (mainScreenState.state as? MainScreenStateMachineStateError)?.error ?? ""
+        let weatherData = (mainScreenState.state as? MainScreenStateWeatherLoaded)?.data
+        let autocompletePredictions = (mainScreenState.state as? MainScreenStateAutocompleteLoaded)?.places ?? []
+        let isLoading = (mainScreenState.state is MainScreenStateLoading)
+        let error = (mainScreenState.state as? MainScreenStateError)?.error ?? ""
         
         VStack {
             HStack {
