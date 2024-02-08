@@ -10,7 +10,10 @@ data class APIResponse<T : ResponseBase>(
     val statusCode: HttpStatusCode,
     val message: String = statusCode.description
 ) {
-    data class APIError(val httpCode: HttpStatusCode, val error: String = httpCode.description)
+    data class APIError(val httpCode: HttpStatusCode, val error: String = httpCode.description) {
+        val throwable: Throwable
+            get() = Exception(error)
+    }
 
     val success: Boolean
         get() = statusCode.isSuccess()

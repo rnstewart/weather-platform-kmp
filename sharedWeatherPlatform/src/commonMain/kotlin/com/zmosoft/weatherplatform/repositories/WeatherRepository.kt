@@ -7,29 +7,37 @@ import kotlinx.coroutines.withContext
 class WeatherRepository: RepositoryBase() {
     suspend fun searchWeatherByName(
         query: String = ""
-    ): WeatherDataResponse? {
+    ): Result<WeatherDataResponse?> {
         return withContext (NetworkDispatcher) {
             val response = openWeatherService.getCurrentWeatherData(
                 query = query
             )
 
-            setError(response.error?.error ?: "")
-            response.data
+            val error = response.error
+            if (error == null) {
+                Result.success(response.data)
+            } else {
+                Result.failure(error.throwable)
+            }
         }
     }
 
     suspend fun searchWeatherByLocation(
         latitude: Double? = null,
         longitude: Double? = null
-    ): WeatherDataResponse? {
+    ): Result<WeatherDataResponse?> {
         return withContext (NetworkDispatcher) {
             val response = openWeatherService.getCurrentWeatherData(
                 latitude = latitude,
                 longitude = longitude
             )
 
-            setError(response.error?.error ?: "")
-            response.data
+            val error = response.error
+            if (error == null) {
+                Result.success(response.data)
+            } else {
+                Result.failure(error.throwable)
+            }
         }
     }
 }

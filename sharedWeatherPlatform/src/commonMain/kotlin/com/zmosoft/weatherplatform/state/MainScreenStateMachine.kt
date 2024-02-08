@@ -44,9 +44,15 @@ class MainScreenStateMachine(
                 input = input
             )
             _state.emit(
-                MainScreenState.AutocompleteLoaded(
-                    result
-                )
+                if (result.isSuccess) {
+                    MainScreenState.AutocompleteLoaded(
+                        result.getOrNull() ?: listOf()
+                    )
+                } else {
+                    MainScreenState.Error(
+                        result.exceptionOrNull()?.message ?: ""
+                    )
+                }
             )
         }
     }
@@ -54,21 +60,35 @@ class MainScreenStateMachine(
     private fun onLocationSelected(location: AutocompletePlacesData.Prediction) {
         coroutineScope.launch {
             _state.emit(MainScreenState.Loading)
-            sharedRepositories.googleMapsRepository.autocompleteResultSelected(
+            val result = sharedRepositories.googleMapsRepository.autocompleteResultSelected(
                 location = location
-            )?.let { (latitude, longitude) ->
-                val weatherData = sharedRepositories.weatherRepository.searchWeatherByLocation(latitude, longitude)
-                _state.emit(
-                    MainScreenState.WeatherLoaded(
-                        data = weatherData
+            )
+            val error = result.exceptionOrNull()?.message
+            if (error?.isNotEmpty() == true) {
+                MainScreenState.Error(error)
+            } else {
+                result.getOrNull()?.let { (latitude, longitude) ->
+                    val weatherData = sharedRepositories.weatherRepository.searchWeatherByLocation(
+                        latitude,
+                        longitude
                     )
-                )
-            } ?: run {
-                _state.emit(
-                    MainScreenState.WeatherLoaded(
-                        data = null
+                    val weatherDataError = weatherData.exceptionOrNull()?.message
+                    _state.emit(
+                        if (weatherDataError?.isNotEmpty() == true) {
+                            MainScreenState.Error(weatherDataError)
+                        } else {
+                            MainScreenState.WeatherLoaded(
+                                data = weatherData.getOrNull()
+                            )
+                        }
                     )
-                )
+                } ?: run {
+                    _state.emit(
+                        MainScreenState.WeatherLoaded(
+                            data = null
+                        )
+                    )
+                }
             }
         }
     }
@@ -79,10 +99,15 @@ class MainScreenStateMachine(
             val response = sharedRepositories.weatherRepository.searchWeatherByName(
                 query = query
             )
+            val error = response.exceptionOrNull()?.message
             _state.emit(
-                MainScreenState.WeatherLoaded(
-                    data = response
-                )
+                if (error?.isNotEmpty() == true) {
+                    MainScreenState.Error(error)
+                } else {
+                    MainScreenState.WeatherLoaded(
+                        data = response.getOrNull()
+                    )
+                }
             )
         }
     }
@@ -94,10 +119,15 @@ class MainScreenStateMachine(
                 latitude = latitude,
                 longitude = longitude
             )
+            val error = response.exceptionOrNull()?.message
             _state.emit(
-                MainScreenState.WeatherLoaded(
-                    data = response
-                )
+                if (error?.isNotEmpty() == true) {
+                    MainScreenState.Error(error)
+                } else {
+                    MainScreenState.WeatherLoaded(
+                        data = response.getOrNull()
+                    )
+                }
             )
         }
     }
