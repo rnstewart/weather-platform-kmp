@@ -11,16 +11,15 @@ import SwiftUI
 import sharedWeatherPlatform
 
 class ObservableMainScreenStateMachine: ObservableObject {
-    private let stateMachine: MainScreenStateMachine
+    private let stateMachine: MainScreenStateMachine = MainScreenStateMachine(
+        scope: nil,
+        sharedRepositories: SharedRepositories()
+    )
     
     @Published
     private(set) var state: MainScreenState
     
     init() {
-        self.stateMachine = MainScreenStateMachine(
-            scope: nil,
-            sharedRepositories: SharedRepositories()
-        )
         self.state = self.stateMachine.state.value
     }
     
