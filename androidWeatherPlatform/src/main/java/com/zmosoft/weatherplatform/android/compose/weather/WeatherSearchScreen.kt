@@ -25,7 +25,8 @@ import coil.compose.rememberImagePainter
 import com.zmosoft.weatherplatform.android.R
 import com.zmosoft.weatherplatform.android.compose.WeatherPlatformTheme
 import com.zmosoft.weatherplatform.android.utils.*
-import com.zmosoft.weatherplatform.state.MainScreenStateMachine
+import com.zmosoft.weatherplatform.state.*
+import com.zmosoft.weatherplatform.state.MainScreenState
 import kotlinx.coroutines.launch
 
 @Composable
@@ -35,10 +36,10 @@ fun WeatherSearchScreen(
 ) {
     val content = LocalRepositoryContent.current
     val state = content.mainScreenState
-    val weatherData = (state as? MainScreenStateMachine.State.WeatherLoaded)?.data
-    val autocompleteResults = (state as? MainScreenStateMachine.State.AutocompleteLoaded)?.places ?: listOf()
-    val loading = (state is MainScreenStateMachine.State.Loading)
-    val error = (state as? MainScreenStateMachine.State.Error)?.error ?: ""
+    val weatherData = (state as? MainScreenState.WeatherLoaded)?.data
+    val autocompleteResults = (state as? MainScreenState.AutocompleteLoaded)?.places ?: listOf()
+    val loading = (state is MainScreenState.Loading)
+    val error = (state as? MainScreenState.Error)?.error ?: ""
     val focusManager = LocalFocusManager.current
 
     val coroutineScope = rememberCoroutineScope()
@@ -84,7 +85,7 @@ fun WeatherSearchScreen(
                     onClick = {
                         focusManager.clearFocus()
                         content.processIntent(
-                            MainScreenStateMachine.Intent.SearchLocation(searchQuery)
+                            MainScreenIntent.SearchLocation(searchQuery)
                         )
                     },
                     enabled = !loading
@@ -100,7 +101,7 @@ fun WeatherSearchScreen(
                     onClick = {
                         focusManager.clearFocus()
                         content.processIntent(
-                            MainScreenStateMachine.Intent.SearchWeatherByName(searchQuery)
+                            MainScreenIntent.SearchWeatherByName(searchQuery)
                         )
                     },
                     enabled = !loading
@@ -149,7 +150,7 @@ fun WeatherSearchScreen(
                                 modifier = Modifier
                                     .clickable {
                                         content.processIntent(
-                                            MainScreenStateMachine.Intent.SelectLocation(prediction)
+                                            MainScreenIntent.SelectLocation(prediction)
                                         )
                                     }
                                     .padding(8.dp)
@@ -272,7 +273,7 @@ fun WeatherSearchScreen(
 fun PreviewWeatherSearchScreen() {
     CompositionLocalProvider(
         LocalRepositoryContent provides RepositoryContent(
-            mainScreenState = MainScreenStateMachine.State.WeatherLoaded(
+            mainScreenState = MainScreenState.WeatherLoaded(
                 data = ComposeTestData.weatherData
             )
         )

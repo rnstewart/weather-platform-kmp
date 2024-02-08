@@ -33,7 +33,7 @@ class MainActivityViewModel(
         try {
             fusedLocationClient.lastLocation.addOnSuccessListener { location ->
                 mainScreenState.process(
-                    MainScreenStateMachine.Intent.SearchWeatherByLocation(
+                    MainScreenIntent.SearchWeatherByLocation(
                         latitude = location.latitude,
                         longitude = location.longitude
                     )
