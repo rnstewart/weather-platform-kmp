@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.zmosoft.weatherplatform.api.models.response.geo.AutocompletePlacesData
 
 @Composable
-fun LocationAutocompleteResults(
+fun LocationAutocompleteResultsScreen(
     modifier: Modifier = Modifier,
     autocompleteResults: List<AutocompletePlacesData.Prediction>,
     onLocationClicked: (AutocompletePlacesData.Prediction) -> Unit

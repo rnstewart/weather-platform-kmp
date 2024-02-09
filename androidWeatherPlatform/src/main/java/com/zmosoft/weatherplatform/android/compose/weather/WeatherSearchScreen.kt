@@ -121,7 +121,7 @@ fun WeatherSearchScreen(
 
         when (state) {
             is MainScreenState.AutocompleteLoaded -> {
-                LocationAutocompleteResults(
+                LocationAutocompleteResultsScreen(
                     modifier = Modifier.weight(1.0f),
                     autocompleteResults = state.places,
                     onLocationClicked = {
@@ -141,7 +141,7 @@ fun WeatherSearchScreen(
             }
             is MainScreenState.WeatherLoaded -> {
                 state.data?.let { weatherData ->
-                    WeatherDataScreen(weatherData = weatherData)
+                    WeatherDataScreen(data = weatherData)
                 }
             }
             is MainScreenState.Empty -> {
