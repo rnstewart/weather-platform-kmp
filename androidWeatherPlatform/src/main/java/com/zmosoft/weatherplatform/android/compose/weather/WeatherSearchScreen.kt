@@ -26,7 +26,7 @@ fun WeatherSearchScreen(
     modifier: Modifier = Modifier,
     onLocationClicked: suspend () -> Unit
 ) {
-    val content = LocalRepositoryContent.current
+    val content = LocalScreenStateContent.current
     val state = content.mainScreenState
     val focusManager = LocalFocusManager.current
 
@@ -153,7 +153,7 @@ fun WeatherSearchScreen(
 @Composable
 fun PreviewWeatherSearchScreen() {
     CompositionLocalProvider(
-        LocalRepositoryContent provides RepositoryContent(
+        LocalScreenStateContent provides ScreenStateContent(
             mainScreenState = MainScreenState.WeatherLoaded(
                 data = ComposeTestData.weatherData
             )

@@ -29,7 +29,7 @@ fun MainScreen(
 fun PreviewMainScreen() {
     WeatherPlatformTheme {
         CompositionLocalProvider(
-            LocalRepositoryContent provides RepositoryContent(
+            LocalScreenStateContent provides ScreenStateContent(
                 mainScreenState = MainScreenState.WeatherLoaded(
                     data = ComposeTestData.weatherData
                 )

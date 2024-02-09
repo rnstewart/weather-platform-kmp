@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity(), DIAware {
         setContent {
             WeatherPlatformTheme {
                 CompositionLocalProvider(
-                    LocalRepositoryContent provides RepositoryContent(
+                    LocalScreenStateContent provides ScreenStateContent(
                         mainScreenState = viewModel.mainScreenState.state.collectAsState().value,
                         processIntent = { intent ->
                             viewModel.mainScreenState.process(intent)
