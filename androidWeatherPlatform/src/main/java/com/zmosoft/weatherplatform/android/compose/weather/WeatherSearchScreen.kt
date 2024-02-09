@@ -140,9 +140,7 @@ fun WeatherSearchScreen(
                 )
             }
             is MainScreenState.WeatherLoaded -> {
-                state.data?.let { weatherData ->
-                    WeatherDataScreen(data = weatherData)
-                }
+                WeatherDataScreen(data = state.data)
             }
             is MainScreenState.Empty -> {
 
