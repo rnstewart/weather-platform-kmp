@@ -30,7 +30,7 @@ fun WeatherSearchScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         WeatherSearchBar(
-            loading = (state is MainScreenState.Loading),
+            loading = (state is MainScreenState.WeatherDataLoading),
             onLocationSearch = { query ->
                 content.processIntent(
                     MainScreenIntent.SearchWeatherByName(query)
@@ -63,16 +63,22 @@ fun WeatherSearchScreen(
             is MainScreenState.Error -> {
                 ErrorScreen(error = state.error)
             }
-            is MainScreenState.Loading -> {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(80.dp)
-                )
-            }
-            is MainScreenState.WeatherLoaded -> {
+            is MainScreenState.WeatherData -> {
                 WeatherDataScreen(data = state.data)
             }
             is MainScreenState.Empty -> {
 
+            }
+            is MainScreenState.WeatherDataLoading -> {
+                Box {
+                    WeatherDataScreen(data = state.data)
+
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(80.dp)
+                            .align(Alignment.TopCenter)
+                    )
+                }
             }
         }
     }
@@ -83,7 +89,7 @@ fun WeatherSearchScreen(
 fun PreviewWeatherSearchScreen() {
     CompositionLocalProvider(
         LocalScreenStateContent provides ScreenStateContent(
-            mainScreenState = MainScreenState.WeatherLoaded(
+            mainScreenState = MainScreenState.WeatherDataLoading(
                 data = ComposeTestData.weatherData
             )
         )

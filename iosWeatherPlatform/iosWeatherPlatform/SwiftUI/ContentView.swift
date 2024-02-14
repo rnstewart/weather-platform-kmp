@@ -7,7 +7,7 @@ struct ContentView: View {
     @State var searchQuery: String = ""
     
     var body: some View {
-        let isLoading = (mainScreenState.state is MainScreenStateLoading)
+        let isLoading = (mainScreenState.state is MainScreenStateWeatherDataLoading)
         
         VStack {
             HStack {
@@ -42,17 +42,20 @@ struct ContentView: View {
                 }
             }
             
-            let autocompletePredictions = (mainScreenState.state as? MainScreenStateAutocompleteLoaded)?.places ?? []
-
-            if (isLoading) {
-                ProgressView()
-                    .padding(6)
-            } else if !autocompletePredictions.isEmpty {
-                LocationAutocompleteResultsView(autocompletePredictions: autocompletePredictions) { location in
+            if let autocompletePredictions = (mainScreenState.state as? MainScreenStateAutocompleteLoaded)?.places {
+                LocationAutocompleteResultsView(
+                    autocompletePredictions: autocompletePredictions
+                ) { location in
                     mainScreenState.onLocationSelected(location: location)
                 }
-            } else if let data = (mainScreenState.state as? MainScreenStateWeatherLoaded)?.data {
+            } else if let data = (mainScreenState.state as? MainScreenStateWeatherData)?.data {
                 WeatherDataView(data: data)
+            } else if let data = (mainScreenState.state as? MainScreenStateWeatherDataLoading)?.data {
+                ZStack {
+                    WeatherDataView(data: data)
+                    ProgressView()
+                        .padding(6)
+                }
             } else if let error = (mainScreenState.state as? MainScreenStateError)?.error, !error.isEmpty {
                 if (!error.isEmpty) {
                     ErrorView(error: error)

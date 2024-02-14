@@ -5,14 +5,16 @@ import com.zmosoft.weatherplatform.api.models.response.weather.WeatherDataRespon
 
 sealed interface MainScreenState {
     data object Empty: MainScreenState
-    data object Loading: MainScreenState
     data class Error(
         val error: String
     ): MainScreenState
     data class AutocompleteLoaded(
         val places: List<AutocompletePlacesData.Prediction>
     ): MainScreenState
-    data class WeatherLoaded(
+    data class WeatherData(
+        val data: WeatherDataResponse?
+    ): MainScreenState
+    data class WeatherDataLoading(
         val data: WeatherDataResponse?
     ): MainScreenState
 }

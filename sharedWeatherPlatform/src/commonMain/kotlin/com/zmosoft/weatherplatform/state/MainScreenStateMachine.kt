@@ -1,6 +1,7 @@
 package com.zmosoft.weatherplatform.state
 
 import com.zmosoft.weatherplatform.api.models.response.geo.AutocompletePlacesData
+import com.zmosoft.weatherplatform.api.models.response.weather.WeatherDataResponse
 import com.zmosoft.weatherplatform.data.SharedRepositories
 import com.zmosoft.weatherplatform.utils.BackgroundDispatcher
 import kotlinx.coroutines.*
@@ -15,6 +16,11 @@ class MainScreenStateMachine(
 
     private val _state: MutableStateFlow<MainScreenState> = MutableStateFlow(MainScreenState.Empty)
     val state: StateFlow<MainScreenState> = _state
+
+    private val currentData: WeatherDataResponse?
+        get() = state.value.let {
+            (it as? MainScreenState.WeatherData)?.data ?: (it as? MainScreenState.WeatherDataLoading)?.data
+        }
 
     fun process(intent: MainScreenIntent) {
         when(intent) {
@@ -39,7 +45,11 @@ class MainScreenStateMachine(
 
     private fun onLocationSearch(input: String) {
         coroutineScope.launch {
-            _state.emit(MainScreenState.Loading)
+            _state.emit(
+                MainScreenState.WeatherDataLoading(
+                    data = currentData
+                )
+            )
             val result = sharedRepositories.googleMapsRepository.searchLocation(
                 input = input
             )
@@ -59,7 +69,11 @@ class MainScreenStateMachine(
 
     private fun onLocationSelected(location: AutocompletePlacesData.Prediction) {
         coroutineScope.launch {
-            _state.emit(MainScreenState.Loading)
+            _state.emit(
+                MainScreenState.WeatherDataLoading(
+                    data = currentData
+                )
+            )
             val result = sharedRepositories.googleMapsRepository.autocompleteResultSelected(
                 location = location
             )
@@ -77,14 +91,14 @@ class MainScreenStateMachine(
                         if (weatherDataError?.isNotEmpty() == true) {
                             MainScreenState.Error(weatherDataError)
                         } else {
-                            MainScreenState.WeatherLoaded(
+                            MainScreenState.WeatherData(
                                 data = weatherData.getOrNull()
                             )
                         }
                     )
                 } ?: run {
                     _state.emit(
-                        MainScreenState.WeatherLoaded(
+                        MainScreenState.WeatherData(
                             data = null
                         )
                     )
@@ -95,7 +109,11 @@ class MainScreenStateMachine(
 
     private fun searchWeatherByName(query: String) {
         coroutineScope.launch {
-            _state.emit(MainScreenState.Loading)
+            _state.emit(
+                MainScreenState.WeatherDataLoading(
+                    data = currentData
+                )
+            )
             val response = sharedRepositories.weatherRepository.searchWeatherByName(
                 query = query
             )
@@ -104,7 +122,7 @@ class MainScreenStateMachine(
                 if (error?.isNotEmpty() == true) {
                     MainScreenState.Error(error)
                 } else {
-                    MainScreenState.WeatherLoaded(
+                    MainScreenState.WeatherData(
                         data = response.getOrNull()
                     )
                 }
@@ -114,7 +132,11 @@ class MainScreenStateMachine(
 
     private fun searchWeatherByLocation(latitude: Double?, longitude: Double?) {
         coroutineScope.launch {
-            _state.emit(MainScreenState.Loading)
+            _state.emit(
+                MainScreenState.WeatherDataLoading(
+                    data = currentData
+                )
+            )
             val response = sharedRepositories.weatherRepository.searchWeatherByLocation(
                 latitude = latitude,
                 longitude = longitude
@@ -124,7 +146,7 @@ class MainScreenStateMachine(
                 if (error?.isNotEmpty() == true) {
                     MainScreenState.Error(error)
                 } else {
-                    MainScreenState.WeatherLoaded(
+                    MainScreenState.WeatherData(
                         data = response.getOrNull()
                     )
                 }
