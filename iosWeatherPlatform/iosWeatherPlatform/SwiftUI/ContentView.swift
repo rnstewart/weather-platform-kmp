@@ -4,59 +4,43 @@ import sharedWeatherPlatform
 struct ContentView: View {
     @StateObject var mainScreenState: ObservableMainScreenStateMachine = ObservableMainScreenStateMachine()
     @StateObject var locationManager = LocationManager()
-    @State var searchQuery: String = ""
     
     var body: some View {
-        let isLoading = (mainScreenState.state is MainScreenStateWeatherDataLoading)
-        
         VStack {
-            HStack {
-                TextField(
-                    "",
-                    text: $searchQuery
-                ).padding(.bottom, 8)
-                    .padding(.top, 16)
-                    .textFieldStyle(.roundedBorder)
-                
-                if (!searchQuery.isEmpty) {
-                    Image(systemName: "list.bullet")
-                        .padding(6)
-                        .onTapGesture {
-                            mainScreenState.onLocationSearch(input: searchQuery)
-                            searchQuery = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
-                        }.disabled(isLoading)
-                    
-                    Image(systemName: "magnifyingglass")
-                        .padding(6)
-                        .onTapGesture {
-                            mainScreenState.searchWeatherByName(query: searchQuery)
-                            searchQuery = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
-                        }.disabled(isLoading)
-                } else {
-                    Image(systemName: "location")
-                        .padding(6)
-                        .onTapGesture {
-                            locationManager.updateLocation()
-                            searchQuery = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
-                        }.disabled(isLoading)
+            let _ = print("MainScreenState: mainScreenState.state = \(mainScreenState.state)")
+            WeatherSearchBar(
+                loading: (mainScreenState.state is MainScreenStateWeatherDataLoading),
+                onLocationSearch: { query in
+                    mainScreenState.onLocationSearch(input: query)
+                },
+                searchWeatherByName: { query in
+                    mainScreenState.searchWeatherByName(query: query)
+                },
+                updateLocation: {
+                    locationManager.updateLocation()
                 }
-            }
+            )
             
             if let autocompletePredictions = (mainScreenState.state as? MainScreenStateAutocompleteLoaded)?.places {
+                let _ = print("MainScreenState: Autocomplete")
                 LocationAutocompleteResultsView(
                     autocompletePredictions: autocompletePredictions
                 ) { location in
                     mainScreenState.onLocationSelected(location: location)
                 }
-            } else if let data = (mainScreenState.state as? MainScreenStateWeatherData)?.data {
-                WeatherDataView(data: data)
-            } else if let data = (mainScreenState.state as? MainScreenStateWeatherDataLoading)?.data {
+            } else if let loading = (mainScreenState.state as? MainScreenStateWeatherDataLoading) {
+                let _ = print("MainScreenState: Loading")
                 ZStack {
-                    WeatherDataView(data: data)
+                    WeatherDataView(data: loading.data)
+                    
                     ProgressView()
                         .padding(6)
                 }
+            } else if let data = (mainScreenState.state as? MainScreenStateWeatherData)?.data {
+                let _ = print("MainScreenState: Loaded")
+                WeatherDataView(data: data)
             } else if let error = (mainScreenState.state as? MainScreenStateError)?.error, !error.isEmpty {
+                let _ = print("MainScreenState: Error")
                 if (!error.isEmpty) {
                     ErrorView(error: error)
                 }
