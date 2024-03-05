@@ -12,7 +12,7 @@ Beyond the Repository and State Machine classes, each app is mostly a normal mob
 
 ### Repositories
 
-The heart of the architecture is the Repository, which should be a familiar concept to most developers. A Repository is a module of code that contains data and exposes functions for operating on that data. In this approach, the Repositories use `MutableStateFlow`s to push that data to the presentation layer. The use of Flows allows this to be handled in a cross-platform way thanks to Swift's `async` concurrency approach; I'll explain how that works later. But first let's look at an example of a Repository, specifically the `WeatherRepository` class in this codebase:
+Data is retrieved with `Repository` classes, which give access to network API calls and (if necessary) the local database. Here's an example of one of the repositories:
 
 ```
 class WeatherRepository: RepositoryBase() {
@@ -54,3 +54,34 @@ class WeatherRepository: RepositoryBase() {
 }
 ```
 
+And here's the `RepositoryBase` class:
+
+```
+open class RepositoryBase: DIAware {
+    final override val di by DI.lazy {
+        importAll(
+            SharedModules.dataModule,
+            SharedModules.repositoriesModule
+        )
+    }
+
+    protected val googleMapsService: GoogleMapsService by di.instance()
+    protected val openWeatherService: OpenWeatherService by di.instance()
+}
+```
+
+Repositories are injected into the `SharedRepository` class:
+
+```
+class SharedRepositories: DIAware {
+    override val di: DI by DI.lazy {
+        importAll(
+            SharedModules.dataModule,
+            SharedModules.repositoriesModule
+        )
+    }
+
+    val googleMapsRepository: GoogleMapsRepository by di.instance()
+    val weatherRepository: WeatherRepository by di.instance()
+}
+```
