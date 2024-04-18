@@ -1,0 +1,27 @@
+// This is the api keys config file for Weather Platform. To get the app working, you need
+// to fill out the API keys in this file and then put one copy in:
+//
+// androidWeatherPlatform/src/main/assets/config/apiKeys.json
+//
+// And one copy in:
+//
+// iosWeatherPlatform/iosWeatherPlatform/apiKeys.json
+//
+// To get a key for Open Weather Map, go to:
+// https://openweathermap.org/api
+// And create a new app.
+//
+// To get a key for Google Maps, go here:
+// https://developers.google.com/maps/documentation/javascript/get-api-key
+// And follow the instructions.
+
+{
+  "openWeatherMap": {
+    "apiKey": "", //Put your OpenWeatherMap API key here
+    "apiHost": "api.openweathermap.org"
+  },
+  "googleMaps": {
+    "apiHost": "maps.googleapis.com",
+    "apiKey": "" //Put your Google Maps API key here
+  }
+}
